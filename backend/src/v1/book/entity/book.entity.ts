@@ -1,21 +1,27 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('products')
-export class ProductEntity {
+@Entity('books')
+export class BookEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  title: string;
+
+  @Column({ default: true })
+  isAvailable: boolean;
 
   @Column()
-  detail: string;
+  author: number;
 
   @Column()
-  price: number;
+  genra: number;
 
   @Column()
-  categoryId: number;
+  publisher: string;
+
+  @Column()
+  publishedYear: number;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

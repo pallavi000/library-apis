@@ -2,7 +2,9 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductModule } from './product/product.module';
+import { BookModule } from './book/book.module';
+import { GenraModule } from './genra/genra.module';
+import { AuthorModel } from './author/author.module';
 
 @Module({
   imports: [
@@ -18,7 +20,10 @@ import { ProductModule } from './product/product.module';
     }),
     UserModule,
     AuthModule,
-    ProductModule,
+    BookModule,
+    GenraModule,
+    AuthModule,
+    AuthorModel,
   ],
   controllers: [],
   providers: [],
