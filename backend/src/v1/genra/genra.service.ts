@@ -12,50 +12,30 @@ export class GenraService {
   ) {}
 
   async createGenra(body: genraDto) {
-    try {
-      const genra = await this.genraModal.insert({
-        name: body.name,
-      });
-      console.log(genra);
-      return 'success';
-    } catch (error) {
-      return error;
-    }
+    const genra = await this.genraModal.insert({
+      name: body.name,
+    });
+    console.log(genra);
+    return 'success';
   }
 
   async findAllGenra() {
-    try {
-      const genra = this.genraModal.find();
-      return genra;
-    } catch (error) {
-      return error;
-    }
+    const genra = this.genraModal.find();
+    return genra;
   }
 
   async findGenraById(id: number) {
-    try {
-      const genra = await this.genraModal.findOne({ where: { id } });
-      return genra;
-    } catch (error) {
-      console.log(error);
-    }
+    const genra = await this.genraModal.findOne({ where: { id } });
+    return genra;
   }
 
   async updateGenraById(id: number, body: genraDto) {
-    try {
-      const genra = await this.genraModal.update({ id }, { ...body });
-      return 'success';
-    } catch (error) {
-      return error;
-    }
+    const genra = await this.genraModal.update({ id }, { ...body });
+    return 'success';
   }
 
   async deleteGenraById(id: number) {
-    try {
-      const genra = await this.genraModal.delete({ id });
-      return 'sucess';
-    } catch (error) {
-      return error;
-    }
+    const genra = await this.genraModal.delete({ id });
+    return 'sucess';
   }
 }

@@ -11,10 +11,12 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { bookDto } from './dto/book.dto';
 import { ApiResponse } from '@nestjs/swagger';
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
 
 @Controller('books')
 export class BookController {
@@ -37,6 +39,7 @@ export class BookController {
   }
 
   @Post('/')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -64,6 +67,7 @@ export class BookController {
   }
 
   @Put('/:id')
+  @UseGuards(AdminAuthGuard)
   async updateBookById(@Param() param: any, @Body() body: bookDto) {
     const { id } = param;
     try {
@@ -75,6 +79,7 @@ export class BookController {
   }
 
   @Delete('/:id')
+  @UseGuards(AdminAuthGuard)
   async deleteBookById(@Param() param) {
     const { id } = param;
     try {

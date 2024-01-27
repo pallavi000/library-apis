@@ -39,6 +39,7 @@ export class AuthorController {
   }
 
   @Post('/')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -71,6 +72,7 @@ export class AuthorController {
   }
 
   @Put('/:id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -86,6 +88,7 @@ export class AuthorController {
   }
 
   @Delete('/:id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

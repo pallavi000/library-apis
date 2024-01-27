@@ -9,14 +9,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
   ) {}
-  login(body: any): any {
-    const user = { ...body, id: 1 };
-    return user;
-  }
 
   async register(body: RegisterDto) {
     const user = await this.userService.createUser(body);
+    return user;
+  }
+
+  async generateToken(user) {
     const token = this.jwtService.sign(user);
-    return { user, token };
+    return token;
   }
 }

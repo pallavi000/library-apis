@@ -18,4 +18,14 @@ export class UserService {
     const user = await this.userModel.save(insertUser);
     return { ...user };
   }
+
+  findUserById(id) {
+    const user = this.userModel.findOne({ where: { id } });
+    return user;
+  }
+
+  findUserByEmail(email: string) {
+    const user = this.userModel.findOne({ where: { email } });
+    return user;
+  }
 }

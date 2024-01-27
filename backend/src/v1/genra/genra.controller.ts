@@ -11,10 +11,12 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { GenraService } from './genra.service';
 import { genraDto } from './dto/genra.dto';
 import { ApiResponse } from '@nestjs/swagger';
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
 
 @Controller('genra')
 export class GenraController {
@@ -36,6 +38,7 @@ export class GenraController {
   }
 
   @Post('/')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -67,6 +70,7 @@ export class GenraController {
   }
 
   @Put('/:id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -82,6 +86,7 @@ export class GenraController {
   }
 
   @Delete('/:id')
+  @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

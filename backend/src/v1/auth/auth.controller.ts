@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -16,20 +17,15 @@ import { Request } from 'express';
 import { AuthGuard } from 'src/guards/auth-jwt/auth-jwt.guard';
 import { IExpressRequest, IExpressUser } from 'src/@types/auth';
 import { ApiResponse } from '@nestjs/swagger';
+import { UserService } from '../user/user.service';
+import { loginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
-
-  @Post('/login')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-  })
-  login(@Body() body: any) {
-    const user = this.authService.login(body);
-    return user;
-  }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -38,9 +34,30 @@ export class AuthController {
   @Post('/register')
   async register(@Body() body: RegisterDto) {
     try {
-      return await this.authService.register(body);
+      const user = await this.authService.register(body);
+      const token = await this.authService.generateToken(user);
+      return { user, token };
     } catch (error) {
       throw new HttpException('Server Error', 400);
+    }
+  }
+
+  @Post('/login')
+  async login(@Body() body: loginDto) {
+    try {
+      const user = await this.userService.findUserByEmail(body.email);
+      if (user) {
+        const validUser = user.password === body.password;
+        if (!validUser) {
+          throw new BadRequestException();
+        }
+        const token = this.authService.generateToken(body);
+        return token;
+      } else {
+        throw 'user not found';
+      }
+    } catch (error) {
+      throw new BadRequestException();
     }
   }
 
