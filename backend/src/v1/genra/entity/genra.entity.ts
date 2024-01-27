@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BookEntity } from 'src/v1/book/entity/book.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('genra')
 export class GenraEntity {
@@ -13,4 +14,7 @@ export class GenraEntity {
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
+
+  @OneToMany(() => BookEntity, (book) => book.author)
+  books: BookEntity[];
 }

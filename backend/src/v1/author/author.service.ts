@@ -12,50 +12,30 @@ export class AuthorService {
   ) {}
 
   async createAuthor(body: authorDto) {
-    try {
-      const author = await this.authorModal.insert({
-        name: body.name,
-      });
-      console.log(author);
-      return 'success';
-    } catch (error) {
-      return error;
-    }
+    const author = await this.authorModal.insert({
+      name: body.name,
+    });
+    console.log(author);
+    return 'success';
   }
 
   async findAllAuthor() {
-    try {
-      const author = this.authorModal.find();
-      return author;
-    } catch (error) {
-      return error;
-    }
+    const author = this.authorModal.find({ relations: ['books'] });
+    return author;
   }
 
   async findAuthorById(id: number) {
-    try {
-      const author = await this.authorModal.findOne({ where: { id } });
-      return author;
-    } catch (error) {
-      console.log(error);
-    }
+    const author = await this.authorModal.findOne({ where: { id } });
+    return author;
   }
 
   async updateAuthorById(id: number, body: authorDto) {
-    try {
-      const author = await this.authorModal.update({ id }, { ...body });
-      return 'success';
-    } catch (error) {
-      return error;
-    }
+    const author = await this.authorModal.update({ id }, { ...body });
+    return 'success';
   }
 
   async deleteAuthorById(id: number) {
-    try {
-      const author = await this.authorModal.delete({ id });
-      return 'sucess';
-    } catch (error) {
-      return error;
-    }
+    const author = await this.authorModal.delete({ id });
+    return 'sucess';
   }
 }

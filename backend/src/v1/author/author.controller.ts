@@ -5,19 +5,30 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { authorDto } from './dto/author.dto';
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('authors')
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
   @Get('/')
+  @Get('/')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: authorDto,
+    isArray: true,
+  })
   async fetchAllAuthors() {
     try {
       const authors = await this.authorService.findAllAuthor();
@@ -28,6 +39,10 @@ export class AuthorController {
   }
 
   @Post('/')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
   async addAuthor(@Body() body: authorDto): Promise<any> {
     console.log('hello');
     try {
@@ -40,6 +55,11 @@ export class AuthorController {
   }
 
   @Get('/:id')
+  @Get('/')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: authorDto,
+  })
   async fetchAuthorById(@Param() param: any) {
     const { id } = param;
     try {
@@ -51,6 +71,10 @@ export class AuthorController {
   }
 
   @Put('/:id')
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+  })
   async updateAuthorById(@Param() param: any, @Body() body: authorDto) {
     const { id } = param;
     try {
@@ -62,6 +86,10 @@ export class AuthorController {
   }
 
   @Delete('/:id')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+  })
   async deleteAuthorById(@Param() param) {
     const { id } = param;
     try {

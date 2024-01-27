@@ -5,6 +5,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -12,12 +14,18 @@ import {
 } from '@nestjs/common';
 import { GenraService } from './genra.service';
 import { genraDto } from './dto/genra.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('genra')
 export class GenraController {
   constructor(private readonly genraService: GenraService) {}
 
   @Get('/')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: genraDto,
+    isArray: true,
+  })
   async fetchAllGenra() {
     try {
       const genra = await this.genraService.findAllGenra();
@@ -28,11 +36,15 @@ export class GenraController {
   }
 
   @Post('/')
-  async addBook(@Body() body: genraDto): Promise<any> {
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
+  async addGenra(@Body() body: genraDto): Promise<any> {
     console.log('hello');
     try {
-      const book = await this.genraService.createGenra(body);
-      return book;
+      const genra = await this.genraService.createGenra(body);
+      return genra;
     } catch (error) {
       console.log(error);
       throw new BadRequestException();
@@ -40,33 +52,45 @@ export class GenraController {
   }
 
   @Get('/:id')
-  async fetchBookById(@Param() param: any) {
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: genraDto,
+  })
+  async fetchGenraById(@Param() param: any) {
     const { id } = param;
     try {
-      const book = await this.genraService.findGenraById(id);
-      return book;
+      const genra = await this.genraService.findGenraById(id);
+      return genra;
     } catch (error) {
       throw new BadGatewayException();
     }
   }
 
   @Put('/:id')
-  async updateBookById(@Param() param: any, @Body() body: genraDto) {
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
+  async updateGenraById(@Param() param: any, @Body() body: genraDto) {
     const { id } = param;
     try {
-      const book = await this.genraService.updateGenraById(id, body);
-      return book;
+      const genra = await this.genraService.updateGenraById(id, body);
+      return genra;
     } catch (error) {
       throw new BadGatewayException();
     }
   }
 
   @Delete('/:id')
-  async deleteBookById(@Param() param) {
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+  })
+  async deleteGenraById(@Param() param) {
     const { id } = param;
     try {
-      const book = await this.genraService.deleteGenraById(id);
-      return book;
+      const genra = await this.genraService.deleteGenraById(id);
+      return genra;
     } catch (error) {
       throw new BadGatewayException();
     }

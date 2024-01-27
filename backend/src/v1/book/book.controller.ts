@@ -5,6 +5,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -12,13 +14,20 @@ import {
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { bookDto } from './dto/book.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Get('/')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: bookDto,
+    isArray: true,
+  })
   async fetchAllBooks() {
+    console.log('fetchbook');
     try {
       const books = await this.bookService.findAllBook();
       return books;
@@ -28,6 +37,10 @@ export class BookController {
   }
 
   @Post('/')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
   async addBook(@Body() body: bookDto): Promise<any> {
     console.log('hello');
     try {
@@ -35,7 +48,7 @@ export class BookController {
       return book;
     } catch (error) {
       console.log(error);
-      throw new BadRequestException();
+      throw new BadRequestException(error.message);
     }
   }
 

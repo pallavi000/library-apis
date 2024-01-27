@@ -1,21 +1,49 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
+import { authorDto } from 'src/v1/author/dto/author.dto';
+import { AuthorEntity } from 'src/v1/author/entity/authot.entity';
+import { GenraEntity } from 'src/v1/genra/entity/genra.entity';
 
 export class bookDto {
+  @ApiProperty({
+    example: 'Deep Work',
+    description: 'title of the Book',
+  })
   @IsString()
   title: string;
 
+  @ApiProperty({
+    example: true,
+    description: 'is book available',
+  })
   @IsBoolean()
   isAvailable: boolean;
 
+  @ApiProperty({
+    example: 1,
+    description: 'author id of the Book',
+  })
   @IsNumber()
-  author: number;
+  author: AuthorEntity;
 
+  @ApiProperty({
+    example: 1,
+    description: 'genra id of the Book',
+  })
   @IsNumber()
-  genra: number;
+  genra: GenraEntity;
 
+  @ApiProperty({
+    example: 'Jonas publication',
+    description: 'publication house of the Book',
+  })
   @IsString()
   publisher: string;
 
+  @ApiProperty({
+    example: 2023,
+    description: 'book published  year',
+  })
   @IsNumber()
   publishedYear: number;
 }

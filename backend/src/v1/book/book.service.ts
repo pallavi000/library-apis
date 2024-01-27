@@ -12,20 +12,16 @@ export class BookService {
   ) {}
 
   async findAllBook(): Promise<bookDto[]> {
-    const books = await this.bookModel.find();
+    const books = await this.bookModel.find({ relations: ['author', 'genra'] });
     return books;
   }
 
   async createBook(body: bookDto) {
-    try {
-      console.log(body);
-      const books = await this.bookModel.insert({
-        ...body,
-      });
-      return 'success';
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(body);
+    const books = await this.bookModel.insert({
+      ...body,
+    });
+    return 'success';
   }
 
   async findBookById(id: number) {

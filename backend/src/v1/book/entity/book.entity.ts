@@ -1,4 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AuthorEntity } from 'src/v1/author/entity/authot.entity';
+import { borrowEntity } from 'src/v1/borrow/entity/borrow.entity';
+import { GenraEntity } from 'src/v1/genra/entity/genra.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('books')
 export class BookEntity {
@@ -12,12 +22,6 @@ export class BookEntity {
   isAvailable: boolean;
 
   @Column()
-  author: number;
-
-  @Column()
-  genra: number;
-
-  @Column()
   publisher: string;
 
   @Column()
@@ -28,4 +32,14 @@ export class BookEntity {
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
+
+  @ManyToOne(() => AuthorEntity, (author) => author.books)
+  author: AuthorEntity;
+
+  @ManyToOne(() => GenraEntity, (genra) => genra.books)
+  genra: GenraEntity;
+
+  @OneToOne(() => borrowEntity, (borrow) => borrow.book)
+  @JoinColumn()
+  borrow: borrowEntity;
 }

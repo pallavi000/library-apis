@@ -7,6 +7,7 @@ import { PORT } from './utils/constant';
 import { LoggingMiddleware } from './middlewares/logging/logging.middleware';
 import { AdminLogginsInterceptor } from './interceptors/admin-loggins/admin-loggins.interceptor';
 import { ErrorHandlerFilter } from './filters/error-handler/error-handler.filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 // middleware -> guard -> interceptors -> pipes -> controller -> filters
 
@@ -20,8 +21,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ErrorHandlerFilter());
+  app.useGlobalInterceptors(new AdminLogginsInterceptor());
 
-  // app.useGlobalInterceptors(new AdminLogginsInterceptor());
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Nest Library Api')
+    .build();
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('/api/v1/docs', app, swaggerDocument);
 
   app.use(cookieParser());
   config();
