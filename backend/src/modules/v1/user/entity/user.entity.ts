@@ -1,14 +1,7 @@
-import { borrowEntity } from 'src/v1/borrow/entity/borrow.entity';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { borrowEntity } from "../../borrow/entity/borrow.entity";
 
-@Entity({ name: 'users' })
+@Entity({ name: "users" })
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -31,10 +24,10 @@ export class UserEntity {
   @Column({ default: false })
   isAdmin: boolean;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 
   @OneToMany(() => borrowEntity, (borrow) => borrow.user)

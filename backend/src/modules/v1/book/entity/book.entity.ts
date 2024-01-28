@@ -1,6 +1,3 @@
-import { AuthorEntity } from 'src/v1/author/entity/authot.entity';
-import { borrowEntity } from 'src/v1/borrow/entity/borrow.entity';
-import { GenraEntity } from 'src/v1/genra/entity/genra.entity';
 import {
   Column,
   Entity,
@@ -8,9 +5,12 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
+} from "typeorm";
+import { AuthorEntity } from "../../author/entity/authot.entity";
+import { GenraEntity } from "../../genra/entity/genra.entity";
+import { borrowEntity } from "../../borrow/entity/borrow.entity";
 
-@Entity('books')
+@Entity("books")
 export class BookEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,10 +27,10 @@ export class BookEntity {
   @Column()
   publishedYear: number;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 
   @ManyToOne(() => AuthorEntity, (author) => author.books)

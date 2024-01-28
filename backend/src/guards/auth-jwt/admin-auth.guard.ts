@@ -4,10 +4,10 @@ import {
   HttpException,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
-import { JWT } from 'src/utils/constant';
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { Request } from "express";
+import { JWT } from "src/utils/constant";
 
 @Injectable()
 export class AdminAuthGuard implements CanActivate {
@@ -16,7 +16,6 @@ export class AdminAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      console.log('not token');
       throw new UnauthorizedException();
     }
     try {
@@ -28,16 +27,15 @@ export class AdminAuthGuard implements CanActivate {
       if (!request.user?.isAdmin) {
         throw new UnauthorizedException();
       }
-      request['user'] = payload;
+      request["user"] = payload;
     } catch (error) {
-      console.log(error, 'error');
       throw new UnauthorizedException();
     }
     return true;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    return type === "Bearer" ? token : undefined;
   }
 }
