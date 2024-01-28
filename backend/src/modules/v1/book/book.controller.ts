@@ -67,6 +67,43 @@ export class BookController {
     }
   }
 
+  @Get('/available-book')
+  async findAvailableBook() {
+    try {
+      const book = await this.bookService.findAvailableBook();
+      return book;
+    } catch (error) {
+      throw new BadGatewayException();
+    }
+  }
+
+  @Get('/search')
+  async fetchProductByTitle(@Query('title') title: string) {
+    try {
+      const book = await this.bookService.findBookByTitle(title);
+      return book;
+    } catch (error) {
+      throw new BadGatewayException('Book not found');
+    }
+  }
+
+  @Get('/filter')
+  async fetchBooksByFilter(
+    @Query('genre') genre: number,
+    @Query('author') author: number,
+  ) {
+    try {
+      const books = await this.bookService.findBooksByFilter(genre, author);
+      if (books.length > 0) {
+        return books;
+      } else {
+        throw new BadGatewayException('Books not found for the given filter');
+      }
+    } catch (error) {
+      throw new BadGatewayException('Error finding books by filter');
+    }
+  }
+
   @Put('/:id')
   @UseGuards(AdminAuthGuard)
   async updateBookById(@Param() param: any, @Body() body: bookDto) {

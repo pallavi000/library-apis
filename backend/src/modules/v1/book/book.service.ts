@@ -29,6 +29,30 @@ export class BookService {
     return book;
   }
 
+  async findAvailableBook() {
+    const books = this.bookModel.find({ where: { isAvailable: true } });
+    return books;
+  }
+
+  async findBookByTitle(title: string) {
+    const books = this.bookModel.find({
+      where: { title: title },
+      relations: ['author', 'genra'],
+    });
+    return books;
+  }
+
+  findBooksByFilter(genreId: number, authorId: number): Promise<bookDto[]> {
+    const books = this.bookModel.find({
+      where: {
+        genra: { id: genreId },
+        author: { id: authorId },
+      },
+      relations: ['author', 'genra'],
+    });
+    return books;
+  }
+
   async updateBookById(id: number, body: bookDto) {
     const book = await this.bookModel.update({ id }, { ...body });
     return 'success';
