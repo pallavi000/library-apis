@@ -25,29 +25,17 @@ export class BookService {
   }
 
   async findBookById(id: number) {
-    try {
-      const book = await this.bookModel.findOne({ where: { id } });
-      return book;
-    } catch (error) {
-      console.log(error);
-    }
+    const book = await this.bookModel.findOne({ where: { id } });
+    return book;
   }
 
   async updateBookById(id: number, body: bookDto) {
-    try {
-      const book = await this.bookModel.update({ id }, { ...body });
-      return 'success';
-    } catch (error) {
-      return error;
-    }
+    const book = await this.bookModel.update({ id }, { ...body });
+    return 'success';
   }
 
   async deleteBookById(id: number) {
-    try {
-      const book = await this.bookModel.delete({ id });
-      return 'sucess';
-    } catch (error) {
-      return error;
-    }
+    const book = await this.bookModel.delete({ id });
+    return 'sucess';
   }
 }

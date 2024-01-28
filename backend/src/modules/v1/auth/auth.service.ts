@@ -15,8 +15,17 @@ export class AuthService {
     return user;
   }
 
+  async comparePassword(password, userPassword) {
+    const isVaildPassword = password === userPassword;
+    if (!isVaildPassword) {
+      return 'Invalid password';
+    }
+    return userPassword;
+  }
+
   async generateToken(user) {
-    const token = this.jwtService.sign(user);
+    console.log(user, 'userrrrrrrrr');
+    const token = this.jwtService.sign(user, { secret: 'test123' });
     return token;
   }
 }

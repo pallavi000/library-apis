@@ -3,6 +3,7 @@ import { RegisterDto } from '../auth/dto/register.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entity/user.entity';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -27,5 +28,19 @@ export class UserService {
   findUserByEmail(email: string) {
     const user = this.userModel.findOne({ where: { email } });
     return user;
+  }
+
+  async generateHashPassword(password) {
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
+  }
+
+  async comparePassword(password, hashPassword) {
+    const isRightPassword = await bcrypt.compare(password, hashPassword);
+    if (!isRightPassword) {
+      return 'wrong password';
+    }
+    return isRightPassword;
   }
 }

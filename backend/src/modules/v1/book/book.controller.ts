@@ -11,6 +11,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { BookService } from './book.service';
@@ -74,7 +75,7 @@ export class BookController {
       const book = await this.bookService.updateBookById(id, body);
       return book;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 
@@ -86,7 +87,7 @@ export class BookController {
       const book = await this.bookService.deleteBookById(id);
       return book;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 }
