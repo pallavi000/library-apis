@@ -11,34 +11,31 @@ export class BorrowService {
     private readonly borrowModal: Repository<borrowEntity>,
   ) {}
 
-  async createBorrowBook(body: borrowDto) {
-    const borrowBook = await this.borrowModal.insert({
+  createBorrowBook(body: borrowDto) {
+    const borrowBook = this.borrowModal.insert({
       ...body,
     });
     console.log(borrowBook);
     return 'success';
   }
 
+  returnBook(bookId: number, body: borrowDto) {
+    const borrowBook = this.borrowModal.update({ id: bookId }, { ...body });
+    return 'successfully book returned';
+  }
+
   async findAllBorrowBook() {
-    try {
-      const borrowBooks = this.borrowModal.find({
-        relations: ['user', 'book'],
-      });
-      return borrowBooks;
-    } catch (error) {
-      return error;
-    }
+    const borrowBooks = this.borrowModal.find({
+      relations: ['user', 'book'],
+    });
+    return borrowBooks;
   }
 
   async findBorrowBookById(id: number) {
-    try {
-      const borrowBook = await this.borrowModal.findOne({
-        where: { id },
-        relations: ['user', 'book'],
-      });
-      return borrowBook;
-    } catch (error) {
-      console.log(error);
-    }
+    const borrowBook = await this.borrowModal.findOne({
+      where: { id },
+      relations: ['user', 'book'],
+    });
+    return borrowBook;
   }
 }

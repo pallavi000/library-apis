@@ -33,7 +33,7 @@ export class GenraController {
       const genra = await this.genraService.findAllGenra();
       return genra;
     } catch (error) {
-      throw new NotFoundException();
+      throw new NotFoundException('Internal server error');
     }
   }
 
@@ -50,7 +50,7 @@ export class GenraController {
       return genra;
     } catch (error) {
       console.log(error);
-      throw new BadRequestException();
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -65,7 +65,7 @@ export class GenraController {
       const genra = await this.genraService.findGenraById(id);
       return genra;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 
@@ -81,7 +81,7 @@ export class GenraController {
       const genra = await this.genraService.updateGenraById(id, body);
       return genra;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 
@@ -97,7 +97,7 @@ export class GenraController {
       const genra = await this.genraService.deleteGenraById(id);
       return genra;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 }

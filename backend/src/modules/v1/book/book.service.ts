@@ -60,6 +60,6 @@ export class BookService {
 
   async deleteBookById(id: number) {
     const book = await this.bookModel.delete({ id });
-    return 'sucess';
+    return 'success';
   }
 }

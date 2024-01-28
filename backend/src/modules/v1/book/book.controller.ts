@@ -63,7 +63,7 @@ export class BookController {
       const book = await this.bookService.findBookById(id);
       return book;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 

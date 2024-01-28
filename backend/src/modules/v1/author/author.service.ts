@@ -11,31 +11,31 @@ export class AuthorService {
     private readonly authorModal: Repository<AuthorEntity>,
   ) {}
 
-  async createAuthor(body: authorDto) {
-    const author = await this.authorModal.insert({
+  createAuthor(body: authorDto) {
+    const author = this.authorModal.insert({
       name: body.name,
     });
     console.log(author);
     return 'success';
   }
 
-  async findAllAuthor() {
+  findAllAuthor() {
     const author = this.authorModal.find({ relations: ['books'] });
     return author;
   }
 
-  async findAuthorById(id: number) {
-    const author = await this.authorModal.findOne({ where: { id } });
+  findAuthorById(id: number) {
+    const author = this.authorModal.findOne({ where: { id } });
     return author;
   }
 
-  async updateAuthorById(id: number, body: authorDto) {
-    const author = await this.authorModal.update({ id }, { ...body });
+  updateAuthorById(id: number, body: authorDto) {
+    const author = this.authorModal.update({ id }, { ...body });
     return 'success';
   }
 
-  async deleteAuthorById(id: number) {
-    const author = await this.authorModal.delete({ id });
-    return 'sucess';
+  deleteAuthorById(id: number) {
+    const author = this.authorModal.delete({ id });
+    return 'success';
   }
 }

@@ -45,13 +45,12 @@ export class AuthorController {
     status: HttpStatus.CREATED,
   })
   async addAuthor(@Body() body: authorDto): Promise<any> {
-    console.log('hello');
     try {
       const author = await this.authorService.createAuthor(body);
       return author;
     } catch (error) {
       console.log(error);
-      throw new BadRequestException();
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -67,7 +66,7 @@ export class AuthorController {
       const author = await this.authorService.findAuthorById(id);
       return author;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 
@@ -83,7 +82,7 @@ export class AuthorController {
       const author = await this.authorService.updateAuthorById(id, body);
       return author;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 
@@ -99,7 +98,7 @@ export class AuthorController {
       const author = await this.authorService.deleteAuthorById(id);
       return author;
     } catch (error) {
-      throw new BadGatewayException();
+      throw new BadGatewayException(error.message);
     }
   }
 }
