@@ -6,18 +6,20 @@ import {
   Param,
   Post,
   UseGuards,
-} from "@nestjs/common";
-import { MemberService } from "./member.service";
-import { memberDto } from "./dto/member.dto";
-import { AuthGuard } from "src/guards/auth-jwt/auth-jwt.guard";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
-import { ApiError } from "src/exceptions/api-error.exception";
+} from '@nestjs/common';
+import { MemberService } from './member.service';
+import { memberDto } from './dto/member.dto';
+import { AuthGuard } from 'src/guards/auth-jwt/auth-jwt.guard';
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+import { ApiError } from 'src/exceptions/api-error.exception';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller("members")
+@ApiTags('Member')
+@Controller('members')
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
-  @Get("/")
+  @Get('/')
   async findAllMembers(): Promise<memberDto[]> {
     try {
       const members = await this.memberService.findAllMember();
@@ -27,7 +29,7 @@ export class MemberController {
     }
   }
 
-  @Post("/")
+  @Post('/')
   async addNewMember(@Body() body: memberDto) {
     try {
       const member = await this.memberService.createMember(body);
@@ -37,7 +39,7 @@ export class MemberController {
     }
   }
 
-  @Get("/:id")
+  @Get('/:id')
   async findMemberById(@Param() param: any): Promise<memberDto> {
     try {
       const { id } = param;
@@ -48,7 +50,7 @@ export class MemberController {
     }
   }
 
-  @Get("/user/:id")
+  @Get('/user/:id')
   async findMemberByUserId(@Param() param: any) {
     const { id } = param;
     try {

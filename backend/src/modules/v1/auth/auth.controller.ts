@@ -16,11 +16,12 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { AuthGuard } from 'src/guards/auth-jwt/auth-jwt.guard';
 import { IExpressRequest } from 'src/@types/auth';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
 import { loginDto } from './dto/login.dto';
 import { ApiError } from 'src/exceptions/api-error.exception';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -73,6 +74,7 @@ export class AuthController {
   @Get('/profile')
   @UseGuards(AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth()
   async getProfile(@Req() req: IExpressRequest) {
     try {
       const user = await this.userService.findUserById(req.user.id);

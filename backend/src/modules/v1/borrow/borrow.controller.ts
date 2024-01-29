@@ -5,31 +5,40 @@ import {
   Controller,
   Get,
   HttpException,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
   Put,
   Req,
   UseGuards,
-} from "@nestjs/common";
-import { BorrowService } from "./borrow.service";
-import { borrowDto } from "./dto/borrow.dto";
-import { BookService } from "../book/book.service";
-import { MemberService } from "../membership/member.service";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
-import { IExpressRequest } from "src/@types/auth";
-import { ApiError } from "src/exceptions/api-error.exception";
+} from '@nestjs/common';
+import { BorrowService } from './borrow.service';
+import { borrowDto } from './dto/borrow.dto';
+import { BookService } from '../book/book.service';
+import { MemberService } from '../membership/member.service';
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+import { IExpressRequest } from 'src/@types/auth';
+import { ApiError } from 'src/exceptions/api-error.exception';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller("borrows")
+@ApiTags('Borrow Book')
+@Controller('borrows')
 export class BorrowController {
   constructor(
     private readonly borrowService: BorrowService,
     private readonly bookService: BookService,
-    private readonly memberService: MemberService
+    private readonly memberService: MemberService,
   ) {}
 
-  @Get("/")
+  @Get('/')
   @UseGuards(AdminAuthGuard)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: borrowDto,
+    isArray: true,
+  })
+  @ApiBearerAuth()
   async getAllBorrowBooks() {
     try {
       const borrowBooks = await this.borrowService.findAllBorrowBook();
@@ -39,19 +48,23 @@ export class BorrowController {
     }
   }
 
-  @Post("/")
+  @Post('/')
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
+  @ApiBearerAuth()
   @UseGuards(AdminAuthGuard)
   async createBorrowBook(@Body() body: borrowDto, @Req() req: IExpressRequest) {
     try {
       const bookId = body.book?.id;
       const book = await this.bookService.findBookById(bookId);
       if (!book.isAvailable) {
-        throw new HttpException("Book is not available", 404);
+        throw new HttpException('Book is not available', 404);
       }
 
       const member = await this.memberService.findMemberByUserId(req.user.id);
       if (!member) {
-        throw new HttpException("user is not library member yet", 404);
+        throw new HttpException('user is not library member yet', 404);
       }
 
       const borrowBook = await this.borrowService.createBorrowBook(body);
@@ -65,16 +78,17 @@ export class BorrowController {
     }
   }
 
-  @Put("/return-book/:id")
+  @Put('/return-book/:id')
   @UseGuards(AdminAuthGuard)
-  async returnBook(@Param("id") bookId: number) {
+  @ApiBearerAuth()
+  async returnBook(@Param('id') bookId: number) {
     try {
       let borrowedBook = await this.borrowService.findBorrowBookById(bookId);
       if (!borrowedBook) {
-        throw new NotFoundException("Borrow book not found.");
+        throw new NotFoundException('Borrow book not found.');
       }
       if ((await borrowedBook).returnDate) {
-        throw new Error("Book is already returned.");
+        throw new Error('Book is already returned.');
       }
       (await borrowedBook).returnDate = new Date();
       const book = this.borrowService.returnBook(bookId, borrowedBook);
@@ -84,8 +98,9 @@ export class BorrowController {
     }
   }
 
-  @Get("/:id")
+  @Get('/:id')
   @UseGuards(AdminAuthGuard)
+  @ApiBearerAuth()
   async findBorrowBookById(@Param() param: any): Promise<borrowDto> {
     const { id } = param;
     try {

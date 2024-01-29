@@ -12,18 +12,19 @@ import {
   Post,
   Put,
   UseGuards,
-} from "@nestjs/common";
-import { GenraService } from "./genra.service";
-import { genraDto } from "./dto/genra.dto";
-import { ApiResponse } from "@nestjs/swagger";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
-import { ApiError } from "src/exceptions/api-error.exception";
+} from '@nestjs/common';
+import { GenraService } from './genra.service';
+import { genraDto } from './dto/genra.dto';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+import { ApiError } from 'src/exceptions/api-error.exception';
 
-@Controller("genra")
+@ApiTags('Genre')
+@Controller('genra')
 export class GenraController {
   constructor(private readonly genraService: GenraService) {}
 
-  @Get("/")
+  @Get('/')
   @ApiResponse({
     status: HttpStatus.OK,
     type: genraDto,
@@ -38,14 +39,15 @@ export class GenraController {
     }
   }
 
-  @Post("/")
+  @Post('/')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
   })
+  @ApiBearerAuth()
   async addGenra(@Body() body: genraDto): Promise<any> {
-    console.log("hello");
+    console.log('hello');
     try {
       const genra = await this.genraService.createGenra(body);
       return genra;
@@ -54,27 +56,13 @@ export class GenraController {
     }
   }
 
-  @Get("/:id")
-  @ApiResponse({
-    status: HttpStatus.OK,
-    type: genraDto,
-  })
-  async fetchGenraById(@Param() param: any) {
-    const { id } = param;
-    try {
-      const genra = await this.genraService.findGenraById(id);
-      return genra;
-    } catch (error) {
-      throw new ApiError(error);
-    }
-  }
-
-  @Put("/:id")
+  @Put('/:id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
   })
+  @ApiBearerAuth()
   async updateGenraById(@Param() param: any, @Body() body: genraDto) {
     const { id } = param;
     try {
@@ -85,16 +73,32 @@ export class GenraController {
     }
   }
 
-  @Delete("/:id")
+  @Delete('/:id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
   })
+  @ApiBearerAuth()
   async deleteGenraById(@Param() param) {
     const { id } = param;
     try {
       const genra = await this.genraService.deleteGenraById(id);
+      return genra;
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
+
+  @Get('/:id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: genraDto,
+  })
+  async fetchGenraById(@Param() param: any) {
+    const { id } = param;
+    try {
+      const genra = await this.genraService.findGenraById(id);
       return genra;
     } catch (error) {
       throw new ApiError(error);
