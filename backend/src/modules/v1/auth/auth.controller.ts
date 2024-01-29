@@ -1,24 +1,25 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
+  NotFoundException,
   Post,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
-import { JwtService } from '@nestjs/jwt';
-import { Request } from 'express';
 import { AuthGuard } from 'src/guards/auth-jwt/auth-jwt.guard';
-import { IExpressRequest, IExpressUser } from 'src/@types/auth';
+import { IExpressRequest } from 'src/@types/auth';
 import { ApiResponse } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
 import { loginDto } from './dto/login.dto';
+import { ApiError } from 'src/exceptions/api-error.exception';
 
 @Controller('auth')
 export class AuthController {
@@ -33,23 +34,17 @@ export class AuthController {
   })
   @Post('/register')
   async register(@Body() body: RegisterDto) {
-    console.log(body);
     try {
-      const hashPassword = await this.userService.generateHashPassword(
-        body.password,
-      );
-      const user = await this.authService.register({
+      const hashPassword = await this.userService.generateHash(body.password);
+      const user = await this.userService.createUser({
         ...body,
         password: hashPassword,
       });
-      const token = await this.authService.generateToken(user);
-
-      console.log(token, 'tokennnnnnn');
-      return 'success';
-      // return { user, token };
+      const { password, ...payload } = user;
+      const token = this.authService.generateToken(payload);
+      return { token };
     } catch (error) {
-      console.log(error);
-      throw new HttpException(error.message, 400);
+      throw new ApiError(error);
     }
   }
 
@@ -57,30 +52,33 @@ export class AuthController {
   async login(@Body() body: loginDto) {
     try {
       const user = await this.userService.findUserByEmail(body.email);
-      if (user) {
-        console.log(user, 'userrrrrrrrrr');
-        const validUser = await this.authService.comparePassword(
-          body.password,
-          user.password,
-        );
-        if (!validUser) {
-          throw new BadRequestException('Invalid Password');
-        }
-        const token = this.authService.generateToken(body);
-        return token;
-      } else {
-        throw new BadRequestException('User not found');
+      if (!user) {
+        throw new NotFoundException('User not found');
       }
+      const validUser = await this.authService.compareHashedPassword(
+        body.password,
+        user.password,
+      );
+      if (!validUser) {
+        throw new BadRequestException('Invalid Password');
+      }
+      const { password, ...payload } = user;
+      const token = this.authService.generateToken(payload);
+      return { token };
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new ApiError(error);
     }
   }
 
   @Get('/profile')
   @UseGuards(AuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   async getProfile(@Req() req: IExpressRequest) {
-    console.log(req.user);
-    const user = req.user;
-    return user;
+    try {
+      const user = await this.userService.findUserById(req.user.id);
+      return user;
+    } catch (error) {
+      throw new ApiError(error);
+    }
   }
 }

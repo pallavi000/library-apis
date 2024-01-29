@@ -1,31 +1,29 @@
-import { Injectable } from '@nestjs/common';
-import { RegisterDto } from './dto/register.dto';
-import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
+import { ClassSerializerInterceptor, Injectable } from "@nestjs/common";
+import { RegisterDto } from "./dto/register.dto";
+import { UserService } from "../user/user.service";
+import { JwtService } from "@nestjs/jwt";
+import { plainToClass, plainToInstance } from "class-transformer";
+import * as bcrypt from "bcrypt";
+import { UserEntity } from "../user/entity/user.entity";
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly jwtService: JwtService) {}
 
-  async register(body: RegisterDto) {
-    const user = await this.userService.createUser(body);
-    return user;
-  }
-
-  async comparePassword(password, userPassword) {
-    const isVaildPassword = password === userPassword;
-    if (!isVaildPassword) {
-      return 'Invalid password';
+  async compareHashedPassword(
+    password: string,
+    hashPassword: string
+  ): Promise<boolean> {
+    try {
+      await bcrypt.compare(password, hashPassword);
+      return true;
+    } catch (error) {
+      return false;
     }
-    return userPassword;
   }
 
-  async generateToken(user) {
-    console.log(user, 'userrrrrrrrr');
-    const token = this.jwtService.sign(user, { secret: 'test123' });
+  generateToken(payload: any): string {
+    const token = this.jwtService.sign(payload);
     return token;
   }
 }

@@ -12,18 +12,18 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common';
-import { AuthorService } from './author.service';
-import { authorDto } from './dto/author.dto';
-import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
-import { ApiResponse } from '@nestjs/swagger';
+} from "@nestjs/common";
+import { AuthorService } from "./author.service";
+import { authorDto } from "./dto/author.dto";
+import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
+import { ApiResponse } from "@nestjs/swagger";
+import { ApiError } from "src/exceptions/api-error.exception";
 
-@Controller('authors')
+@Controller("authors")
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
-  @Get('/')
-  @Get('/')
+  @Get("/")
   @ApiResponse({
     status: HttpStatus.OK,
     type: authorDto,
@@ -34,11 +34,11 @@ export class AuthorController {
       const authors = await this.authorService.findAllAuthor();
       return authors;
     } catch (error) {
-      throw new NotFoundException();
+      throw new ApiError(error);
     }
   }
 
-  @Post('/')
+  @Post("/")
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -46,16 +46,15 @@ export class AuthorController {
   })
   async addAuthor(@Body() body: authorDto): Promise<any> {
     try {
-      const author = await this.authorService.createAuthor(body);
-      return author;
+      await this.authorService.createAuthor(body);
+      return {};
     } catch (error) {
-      console.log(error);
-      throw new BadRequestException(error.message);
+      throw new ApiError(error);
     }
   }
 
-  @Get('/:id')
-  @Get('/')
+  @Get("/:id")
+  @Get("/")
   @ApiResponse({
     status: HttpStatus.OK,
     type: authorDto,
@@ -66,11 +65,11 @@ export class AuthorController {
       const author = await this.authorService.findAuthorById(id);
       return author;
     } catch (error) {
-      throw new BadGatewayException(error.message);
+      throw new ApiError(error);
     }
   }
 
-  @Put('/:id')
+  @Put("/:id")
   @UseGuards(AdminAuthGuard)
   @HttpCode(201)
   @ApiResponse({
@@ -82,11 +81,11 @@ export class AuthorController {
       const author = await this.authorService.updateAuthorById(id, body);
       return author;
     } catch (error) {
-      throw new BadGatewayException(error.message);
+      throw new ApiError(error);
     }
   }
 
-  @Delete('/:id')
+  @Delete("/:id")
   @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
@@ -98,7 +97,7 @@ export class AuthorController {
       const author = await this.authorService.deleteAuthorById(id);
       return author;
     } catch (error) {
-      throw new BadGatewayException(error.message);
+      throw new ApiError(error);
     }
   }
 }

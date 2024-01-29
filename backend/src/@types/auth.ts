@@ -1,6 +1,7 @@
-import { Request } from 'express';
+import { Request } from "express";
 
 export interface IExpressUser {
+  id: number;
   name: string;
   email: string;
   password: string;

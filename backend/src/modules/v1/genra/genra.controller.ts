@@ -12,17 +12,18 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common';
-import { GenraService } from './genra.service';
-import { genraDto } from './dto/genra.dto';
-import { ApiResponse } from '@nestjs/swagger';
-import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+} from "@nestjs/common";
+import { GenraService } from "./genra.service";
+import { genraDto } from "./dto/genra.dto";
+import { ApiResponse } from "@nestjs/swagger";
+import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
+import { ApiError } from "src/exceptions/api-error.exception";
 
-@Controller('genra')
+@Controller("genra")
 export class GenraController {
   constructor(private readonly genraService: GenraService) {}
 
-  @Get('/')
+  @Get("/")
   @ApiResponse({
     status: HttpStatus.OK,
     type: genraDto,
@@ -33,28 +34,27 @@ export class GenraController {
       const genra = await this.genraService.findAllGenra();
       return genra;
     } catch (error) {
-      throw new NotFoundException('Internal server error');
+      throw new ApiError(error);
     }
   }
 
-  @Post('/')
+  @Post("/")
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
   })
   async addGenra(@Body() body: genraDto): Promise<any> {
-    console.log('hello');
+    console.log("hello");
     try {
       const genra = await this.genraService.createGenra(body);
       return genra;
     } catch (error) {
-      console.log(error);
-      throw new BadRequestException(error.message);
+      throw new ApiError(error);
     }
   }
 
-  @Get('/:id')
+  @Get("/:id")
   @ApiResponse({
     status: HttpStatus.OK,
     type: genraDto,
@@ -65,11 +65,11 @@ export class GenraController {
       const genra = await this.genraService.findGenraById(id);
       return genra;
     } catch (error) {
-      throw new BadGatewayException(error.message);
+      throw new ApiError(error);
     }
   }
 
-  @Put('/:id')
+  @Put("/:id")
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -81,11 +81,11 @@ export class GenraController {
       const genra = await this.genraService.updateGenraById(id, body);
       return genra;
     } catch (error) {
-      throw new BadGatewayException(error.message);
+      throw new ApiError(error);
     }
   }
 
-  @Delete('/:id')
+  @Delete("/:id")
   @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
@@ -97,7 +97,7 @@ export class GenraController {
       const genra = await this.genraService.deleteGenraById(id);
       return genra;
     } catch (error) {
-      throw new BadGatewayException(error.message);
+      throw new ApiError(error);
     }
   }
 }

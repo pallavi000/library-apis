@@ -6,55 +6,56 @@ import {
   Param,
   Post,
   UseGuards,
-} from '@nestjs/common';
-import { MemberService } from './member.service';
-import { memberDto } from './dto/member.dto';
-import { AuthGuard } from 'src/guards/auth-jwt/auth-jwt.guard';
-import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+} from "@nestjs/common";
+import { MemberService } from "./member.service";
+import { memberDto } from "./dto/member.dto";
+import { AuthGuard } from "src/guards/auth-jwt/auth-jwt.guard";
+import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
+import { ApiError } from "src/exceptions/api-error.exception";
 
-@Controller('members')
+@Controller("members")
 export class MemberController {
   constructor(private readonly memberService: MemberService) {}
 
-  @Get('/')
+  @Get("/")
   async findAllMembers(): Promise<memberDto[]> {
     try {
       const members = await this.memberService.findAllMember();
       return members;
     } catch (error) {
-      throw new BadRequestException('internal server error');
+      throw new ApiError(error);
     }
   }
 
-  @Post('/')
+  @Post("/")
   async addNewMember(@Body() body: memberDto) {
     try {
       const member = await this.memberService.createMember(body);
       return member;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new ApiError(error);
     }
   }
 
-  @Get('/:id')
+  @Get("/:id")
   async findMemberById(@Param() param: any): Promise<memberDto> {
     try {
       const { id } = param;
       const member = await this.memberService.findMemberById(id);
       return member;
     } catch (error) {
-      throw new BadRequestException('Internal Server Error');
+      throw new ApiError(error);
     }
   }
 
-  @Get('/user/:id')
+  @Get("/user/:id")
   async findMemberByUserId(@Param() param: any) {
     const { id } = param;
     try {
       const member = await this.memberService.findMemberByUserId(id);
       return member;
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new ApiError(error);
     }
   }
 }

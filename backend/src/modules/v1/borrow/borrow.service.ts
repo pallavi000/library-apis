@@ -1,32 +1,33 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { borrowEntity } from './entity/borrow.entity';
-import { Repository } from 'typeorm';
-import { borrowDto } from './dto/borrow.dto';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { borrowEntity } from "./entity/borrow.entity";
+import { Repository } from "typeorm";
+import { borrowDto } from "./dto/borrow.dto";
 
 @Injectable()
 export class BorrowService {
   constructor(
     @InjectRepository(borrowEntity)
-    private readonly borrowModal: Repository<borrowEntity>,
+    private readonly borrowModal: Repository<borrowEntity>
   ) {}
 
-  createBorrowBook(body: borrowDto) {
-    const borrowBook = this.borrowModal.insert({
+  async createBorrowBook(body: borrowDto) {
+    return await this.borrowModal.insert({
       ...body,
     });
-    console.log(borrowBook);
-    return 'success';
   }
 
-  returnBook(bookId: number, body: borrowDto) {
-    const borrowBook = this.borrowModal.update({ id: bookId }, { ...body });
-    return 'successfully book returned';
+  async returnBook(bookId: number, body: borrowDto) {
+    const borrowBook = await this.borrowModal.update(
+      { id: bookId },
+      { ...body }
+    );
+    return "successfully book returned";
   }
 
   async findAllBorrowBook() {
-    const borrowBooks = this.borrowModal.find({
-      relations: ['user', 'book'],
+    const borrowBooks = await this.borrowModal.find({
+      relations: ["user", "book"],
     });
     return borrowBooks;
   }
@@ -34,7 +35,7 @@ export class BorrowService {
   async findBorrowBookById(id: number) {
     const borrowBook = await this.borrowModal.findOne({
       where: { id },
-      relations: ['user', 'book'],
+      relations: ["user", "book"],
     });
     return borrowBook;
   }
