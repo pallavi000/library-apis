@@ -1,0 +1,121 @@
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { getAllUsersApi } from "../../../api/user";
+import {
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Container,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { TGenre } from "../../../@types/genre";
+import { Add } from "@mui/icons-material";
+import { fetchAllBook, fetchAllGenre } from "../../../api/home";
+import { TBook } from "../../../@types/book";
+import AddBookModal from "./AddBookModal";
+
+function Books() {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const {
+    isLoading,
+    isSuccess,
+    data: books,
+  } = useQuery(["books"], fetchAllBook);
+
+  return (
+    <Container component="main" maxWidth="xl">
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={5}
+      >
+        <Typography variant="h6">Books</Typography>
+        <Button
+          size="small"
+          variant="contained"
+          startIcon={<Add />}
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          New Books
+        </Button>
+      </Stack>
+      <AddBookModal
+        isOpen={isAddModalOpen}
+        handleClose={() => setIsAddModalOpen(false)}
+      />
+
+      <Card>
+        <CardContent>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Image</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Author</TableCell>
+                  <TableCell>Genre</TableCell>
+                  <TableCell>Publisher</TableCell>
+                  <TableCell>Published Year</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Created At</TableCell>
+                  <TableCell>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {isSuccess &&
+                  books.map((book: TBook) => (
+                    <TableRow key={book.id}>
+                      <TableCell>{book.id}</TableCell>
+                      <TableCell>
+                        <img src={book?.image} height={70} width={70} />
+                      </TableCell>
+                      <TableCell>{book.title}</TableCell>
+
+                      <TableCell>{book.author?.name}</TableCell>
+                      <TableCell>{book.genra?.name}</TableCell>
+                      <TableCell>{book.publisher}</TableCell>
+                      <TableCell>{book.publishedYear}</TableCell>
+                      <TableCell>
+                        {book.isAvailable ? (
+                          <Chip
+                            label="Available"
+                            variant="outlined"
+                            color="success"
+                            size="small"
+                            sx={{ width: "fit-content" }}
+                          />
+                        ) : (
+                          <Chip
+                            label="Borrowed"
+                            variant="outlined"
+                            color="error"
+                            size="small"
+                            sx={{ width: "fit-content" }}
+                          />
+                        )}
+                      </TableCell>
+
+                      <TableCell>{book.createdAt}</TableCell>
+                      <TableCell>Action Icons</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
+    </Container>
+  );
+}
+
+export default Books;

@@ -11,29 +11,31 @@ import {
   Req,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
-import { AuthGuard } from 'src/guards/auth-jwt/auth-jwt.guard';
-import { IExpressRequest } from 'src/@types/auth';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserService } from '../user/user.service';
-import { loginDto } from './dto/login.dto';
-import { ApiError } from 'src/exceptions/api-error.exception';
+} from "@nestjs/common";
+import { AuthService } from "./auth.service";
+import { RegisterDto } from "./dto/register.dto";
+import { AuthGuard } from "src/guards/auth-jwt/auth-jwt.guard";
+import { IExpressRequest } from "src/@types/auth";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { UserService } from "../user/user.service";
+import { loginDto } from "./dto/login.dto";
+import { ApiError } from "src/exceptions/api-error.exception";
+import { MemberService } from "../membership/member.service";
 
-@ApiTags('Auth')
-@Controller('auth')
+@ApiTags("Auth")
+@Controller("auth")
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
+    private readonly membershipService: MemberService
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
   })
-  @Post('/register')
+  @Post("/register")
   async register(@Body() body: RegisterDto) {
     try {
       const hashPassword = await this.userService.generateHash(body.password);
@@ -41,6 +43,14 @@ export class AuthController {
         ...body,
         password: hashPassword,
       });
+      const member = await this.membershipService.createMember({
+        user: user.id,
+      });
+
+      // add member to user table
+      user.member = member;
+      await this.userService.updateUser(user.id, user);
+
       const { password, ...payload } = user;
       const token = this.authService.generateToken(payload);
       return { token };
@@ -49,19 +59,19 @@ export class AuthController {
     }
   }
 
-  @Post('/login')
+  @Post("/login")
   async login(@Body() body: loginDto) {
     try {
       const user = await this.userService.findUserByEmail(body.email);
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new NotFoundException("User not found");
       }
       const validUser = await this.authService.compareHashedPassword(
         body.password,
-        user.password,
+        user.password
       );
       if (!validUser) {
-        throw new BadRequestException('Invalid Password');
+        throw new BadRequestException("Invalid Password");
       }
       const { password, ...payload } = user;
       const token = this.authService.generateToken(payload);
@@ -71,7 +81,7 @@ export class AuthController {
     }
   }
 
-  @Get('/profile')
+  @Get("/profile")
   @UseGuards(AuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth()

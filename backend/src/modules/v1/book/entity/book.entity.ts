@@ -5,12 +5,12 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { AuthorEntity } from "../../author/entity/authot.entity";
-import { GenraEntity } from "../../genra/entity/genra.entity";
-import { borrowEntity } from "../../borrow/entity/borrow.entity";
+} from 'typeorm';
+import { AuthorEntity } from '../../author/entity/authot.entity';
+import { GenraEntity } from '../../genra/entity/genra.entity';
+import { borrowEntity } from '../../borrow/entity/borrow.entity';
 
-@Entity("books")
+@Entity('books')
 export class BookEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -25,12 +25,15 @@ export class BookEntity {
   publisher: string;
 
   @Column()
+  image: string;
+
+  @Column()
   publishedYear: number;
 
-  @Column({ default: () => "CURRENT_TIMESTAMP" })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ default: () => "CURRENT_TIMESTAMP" })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 
   @ManyToOne(() => AuthorEntity, (author) => author.books)

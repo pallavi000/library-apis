@@ -32,7 +32,7 @@ export class BorrowController {
   ) {}
 
   @Get('/')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   @ApiResponse({
     status: HttpStatus.OK,
     type: borrowDto,
@@ -53,7 +53,7 @@ export class BorrowController {
     status: HttpStatus.CREATED,
   })
   @ApiBearerAuth()
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   async createBorrowBook(@Body() body: borrowDto, @Req() req: IExpressRequest) {
     try {
       const bookId = body.book?.id;
@@ -79,7 +79,7 @@ export class BorrowController {
   }
 
   @Put('/return-book/:id')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   async returnBook(@Param('id') bookId: number) {
     try {
@@ -99,7 +99,7 @@ export class BorrowController {
   }
 
   @Get('/:id')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   async findBorrowBookById(@Param() param: any): Promise<borrowDto> {
     const { id } = param;

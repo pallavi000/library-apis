@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+} from "typeorm";
 import { borrowEntity } from "../../borrow/entity/borrow.entity";
 import { MembershipEntity } from "../../membership/entity/membership.entity";
 import { Exclude } from "class-transformer";
@@ -36,6 +43,7 @@ export class UserEntity {
   @OneToMany(() => borrowEntity, (borrow) => borrow.user)
   borrows: borrowEntity[];
 
-  @OneToMany(() => MembershipEntity, (member) => member.user)
+  @OneToOne(() => MembershipEntity, (member) => member.user)
+  @JoinColumn()
   member: MembershipEntity;
 }

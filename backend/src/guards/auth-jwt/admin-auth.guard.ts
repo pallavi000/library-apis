@@ -24,7 +24,7 @@ export class AdminAuthGuard implements CanActivate {
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      if (!request.user?.isAdmin) {
+      if (!payload?.isAdmin) {
         throw new UnauthorizedException();
       }
       request["user"] = payload;

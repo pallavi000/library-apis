@@ -40,7 +40,7 @@ export class GenraController {
   }
 
   @Post('/')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -57,7 +57,7 @@ export class GenraController {
   }
 
   @Put('/:id')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
@@ -74,7 +74,7 @@ export class GenraController {
   }
 
   @Delete('/:id')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

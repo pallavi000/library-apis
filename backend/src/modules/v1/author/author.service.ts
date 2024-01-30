@@ -13,7 +13,7 @@ export class AuthorService {
 
   async createAuthor(body: authorDto) {
     return await this.authorModal.insert({
-      name: body.name,
+      ...body,
     });
   }
 

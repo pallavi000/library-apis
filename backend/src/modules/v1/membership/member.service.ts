@@ -17,6 +17,14 @@ export class MemberService {
     return members;
   }
 
+  async findInactiveMembers() {
+    const members = await this.memberModal.find({
+      where: { isActive: false },
+      relations: ["user"],
+    });
+    return members;
+  }
+
   async findMemberById(id: number) {
     const member = await this.memberModal.findOne({
       where: { id },
@@ -26,10 +34,11 @@ export class MemberService {
   }
 
   async createMember(body: memberDto) {
-    const member = await this.memberModal.insert({
+    const member = this.memberModal.create({
       ...body,
+      user: { id: body.user },
     });
-    return {};
+    return await this.memberModal.save(member);
   }
 
   async findMemberByUserId(userId: number) {
@@ -38,5 +47,25 @@ export class MemberService {
       relations: ["user"],
     });
     return member;
+  }
+
+  async updateMembership(id: number, body: memberDto) {
+    return await this.memberModal.update(
+      { id },
+      {
+        ...body,
+        user: { id: body.user },
+      }
+    );
+  }
+
+  async activeMembership(id: number) {
+    const updatedMember = await this.memberModal.findOneBy({ id });
+    updatedMember.isActive = true;
+    return await this.memberModal.save(updatedMember);
+  }
+
+  async deleteMembership(id: number) {
+    return await this.memberModal.delete({ id: id });
   }
 }

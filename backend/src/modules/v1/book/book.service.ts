@@ -16,6 +16,28 @@ export class BookService {
     return books;
   }
 
+  async findBooksPagination(
+    page: number = 1,
+    limit: number = 10,
+    genre: number = 0,
+    author: number = 0
+  ): Promise<bookDto[]> {
+    const skip = (page - 1) * limit;
+    const where: any = {};
+    if (genre) {
+      where.genra = genre;
+    }
+    if (author) {
+      where.author = author;
+    }
+    return await this.bookModel.find({
+      where: where,
+      take: limit,
+      skip,
+      relations: ["author", "genra"],
+    });
+  }
+
   async createBook(body: bookDto) {
     return await this.bookModel.insert({
       ...body,
@@ -23,12 +45,18 @@ export class BookService {
   }
 
   async findBookById(id: number) {
-    const book = await this.bookModel.findOne({ where: { id } });
+    const book = await this.bookModel.findOne({
+      where: { id },
+      relations: ["author", "genra"],
+    });
     return book;
   }
 
   async findAvailableBook() {
-    const books = await this.bookModel.find({ where: { isAvailable: true } });
+    const books = await this.bookModel.find({
+      where: { isAvailable: true },
+      relations: ["author", "genra"],
+    });
     return books;
   }
 

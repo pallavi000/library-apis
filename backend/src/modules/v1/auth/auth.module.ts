@@ -6,6 +6,7 @@ import { JWT } from "src/utils/constant";
 import { UserService } from "../user/user.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "../user/entity/user.entity";
+import { MemberModule } from "../membership/member.module";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserEntity } from "../user/entity/user.entity";
       secret: JWT.SECRET,
       signOptions: { expiresIn: JWT.EXPIRES_IN },
     }),
+    MemberModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService],
