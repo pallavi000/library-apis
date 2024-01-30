@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getAllUsersApi } from "../../../api/user";
 import {
   Button,
@@ -21,14 +21,40 @@ import { Add } from "@mui/icons-material";
 import { fetchAllBook, fetchAllGenre } from "../../../api/home";
 import { TBook } from "../../../@types/book";
 import AddBookModal from "./AddBookModal";
+import { deleteBook } from "../../../api/book";
+
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditBookModal from "./EditBookModal";
 
 function Books() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [activeBook, setActiveBook] = useState<number>(0);
+  const queryClient = useQueryClient();
+
   const {
     isLoading,
     isSuccess,
     data: books,
   } = useQuery(["books"], fetchAllBook);
+
+  const triggerEditBtn = (id: number) => {
+    console.log(id);
+    setIsEditModalOpen(true);
+    setActiveBook(id);
+  };
+
+  const mutation = useMutation((id: number) => deleteBook(id), {
+    onSuccess: () => {
+      // Invalidate the queries related to authors after successful deletion
+      queryClient.invalidateQueries("books");
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    mutation.mutate(id);
+  };
 
   return (
     <Container component="main" maxWidth="xl">
@@ -51,6 +77,12 @@ function Books() {
       <AddBookModal
         isOpen={isAddModalOpen}
         handleClose={() => setIsAddModalOpen(false)}
+      />
+
+      <EditBookModal
+        isOpen={isEditModalOpen}
+        handleClose={() => setIsEditModalOpen(false)}
+        id={activeBook}
       />
 
       <Card>
@@ -80,7 +112,6 @@ function Books() {
                         <img src={book?.image} height={70} width={70} />
                       </TableCell>
                       <TableCell>{book.title}</TableCell>
-
                       <TableCell>{book.author?.name}</TableCell>
                       <TableCell>{book.genra?.name}</TableCell>
                       <TableCell>{book.publisher}</TableCell>
@@ -104,9 +135,18 @@ function Books() {
                           />
                         )}
                       </TableCell>
-
                       <TableCell>{book.createdAt}</TableCell>
-                      <TableCell>Action Icons</TableCell>
+                      <TableCell sx={{ display: "flex", alignItems: "center" }}>
+                        <Button
+                          size="small"
+                          onClick={() => triggerEditBtn(book.id)}
+                        >
+                          <BorderColorIcon color="warning" />
+                        </Button>
+                        <Button onClick={() => handleDelete(book.id)}>
+                          <DeleteIcon color="error" />
+                        </Button>
+                      </TableCell>{" "}
                     </TableRow>
                   ))}
               </TableBody>
