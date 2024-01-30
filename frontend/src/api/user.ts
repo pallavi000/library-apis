@@ -20,3 +20,12 @@ export async function fetchUsersWithoutMembership() {
     throw error;
   }
 }
+
+export async function deleteUser(id: number) {
+  try {
+    const response = await axiosInstance.delete(`/users/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

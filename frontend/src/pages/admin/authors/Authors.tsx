@@ -114,7 +114,7 @@ function Authors() {
                       <TableCell>{author.name}</TableCell>
                       <TableCell>{author.bio}</TableCell>
                       <TableCell>{author.createdAt}</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ display: "flex", alignItems: "center" }}>
                         <Button
                           size="small"
                           onClick={() => triggerEditBtn(author.id)}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteUser, getAllUsersApi } from "../../../api/user";
+import { deleteUser } from "../../../api/user";
 import {
   Button,
   Card,
@@ -15,38 +15,31 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { TUser } from "../../../@types/user";
 import { Add } from "@mui/icons-material";
-import AddUserModal from "./AddUserModal";
 
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { fetchAllBorrows } from "../../../api/borrow";
+import { TBorrow } from "../../../@types/borrow";
 
-function Users() {
+function Borrows() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [activeGenre, setActiveGenre] = useState<number>(0);
 
   const queryClient = useQueryClient();
 
   const {
     isLoading,
     isSuccess,
-    data: users,
-  } = useQuery(["users"], getAllUsersApi);
+    data: borrows,
+  } = useQuery(["borrows"], fetchAllBorrows);
 
   const mutation = useMutation((id: number) => deleteUser(id), {
     onSuccess: () => {
       // Invalidate the queries related to authors after successful deletion
-      queryClient.invalidateQueries("users");
+      queryClient.invalidateQueries("borrows");
     },
   });
-
-  const triggerEditBtn = (id: number) => {
-    console.log(id);
-    setIsEditModalOpen(true);
-    setActiveGenre(id);
-  };
 
   const handleDelete = (id: number) => {
     mutation.mutate(id);
@@ -60,21 +53,16 @@ function Users() {
         justifyContent="space-between"
         mb={5}
       >
-        <Typography variant="h6">Users</Typography>
+        <Typography variant="h6">Borrows</Typography>
         <Button
           size="small"
           variant="contained"
           startIcon={<Add />}
           onClick={() => setIsAddModalOpen(true)}
         >
-          New User
+          Issue Book
         </Button>
       </Stack>
-
-      <AddUserModal
-        isOpen={isAddModalOpen}
-        handleClose={() => setIsAddModalOpen(false)}
-      />
 
       <Card>
         <CardContent>
@@ -83,31 +71,26 @@ function Users() {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Created At</TableCell>
+                  <TableCell>Book</TableCell>
+                  <TableCell>User</TableCell>
+                  <TableCell>Book Issue Date</TableCell>
                   <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {isSuccess &&
-                  users.map((user: TUser) => (
-                    <TableRow key={user.id}>
-                      <TableCell>{user.id}</TableCell>
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.phone || "NULL"}</TableCell>
-                      <TableCell>{user.createdAt}</TableCell>
+                  borrows.map((borrow: TBorrow) => (
+                    <TableRow key={borrow.id}>
+                      <TableCell>{borrow.id}</TableCell>
+                      <TableCell>{borrow.book?.title}</TableCell>
+                      <TableCell>{borrow.user?.email}</TableCell>
+                      <TableCell>{borrow.borrowDate || "NULL"}</TableCell>
                       <TableCell sx={{ display: "flex", alignItems: "center" }}>
-                        <Button
-                          size="small"
-                          onClick={() => triggerEditBtn(user.id)}
-                        >
+                        <Button size="small">
                           <BorderColorIcon color="warning" />
                         </Button>
 
-                        <Button onClick={() => handleDelete(user.id)}>
+                        <Button onClick={() => handleDelete(borrow.id)}>
                           <DeleteIcon color="error" />
                         </Button>
                       </TableCell>{" "}
@@ -122,4 +105,4 @@ function Users() {
   );
 }
 
-export default Users;
+export default Borrows;

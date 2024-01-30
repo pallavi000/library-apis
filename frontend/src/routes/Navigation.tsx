@@ -12,6 +12,7 @@ import Membership from "../pages/admin/membership/Membership";
 import Authors from "../pages/admin/authors/Authors";
 import Genres from "../pages/admin/genres/Genres";
 import Books from "../pages/admin/books/Books";
+import Borrows from "../pages/admin/borrows/Borrow";
 
 function Navigation() {
   return (
@@ -34,6 +35,7 @@ function Navigation() {
         <Route path="/admin/authors" element={<Authors />} />
         <Route path="/admin/genres" element={<Genres />} />
         <Route path="/admin/books" element={<Books />} />
+        <Route path="/admin/borrows" element={<Borrows />} />
       </Route>
     </Routes>
   );
