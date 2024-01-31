@@ -44,7 +44,11 @@ function SignUp() {
   const mutation = useMutation((data: RegisterInputs) => registerApi(data), {
     onSuccess: (data) => {
       setToken(data.token);
-      window.location.href = "/";
+      if (data?.user?.isAdmin) {
+        window.location.href = "/admin/dashboard";
+      } else {
+        window.location.href = "/";
+      }
     },
   });
 

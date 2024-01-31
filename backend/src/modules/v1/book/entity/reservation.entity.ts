@@ -1,32 +1,23 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { BookEntity } from "../../book/entity/book.entity";
+import { BookEntity } from "./book.entity";
 import { UserEntity } from "../../user/entity/user.entity";
-import { IsOptional } from "class-validator";
 
-@Entity("borrows")
-export class borrowEntity {
+@Entity("reservations")
+export class ReservationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ default: () => "CURRENT_TIMESTAMP" })
-  borrowDate: Date;
+  reservationDate: Date;
 
   @Column()
-  dueDate: Date;
-
-  @Column()
-  @IsOptional()
-  returnDate: Date;
-
-  @Column({ default: false })
-  isReturned: boolean;
+  expirationDate: Date;
 
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
@@ -34,10 +25,10 @@ export class borrowEntity {
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 
-  @ManyToOne(() => BookEntity, (book) => book.borrows)
+  @ManyToOne(() => BookEntity, (book) => book.reservations)
   book: BookEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.borrows)
+  @ManyToOne(() => UserEntity, (user) => user.reservations)
   user: UserEntity;
 
   @Column()

@@ -50,10 +50,9 @@ export class AuthController {
       // add member to user table
       user.member = member;
       await this.userService.updateUser(user.id, user);
-
       const { password, ...payload } = user;
       const token = this.authService.generateToken(payload);
-      return { token };
+      return { token, user: payload };
     } catch (error) {
       throw new ApiError(error);
     }
@@ -75,7 +74,7 @@ export class AuthController {
       }
       const { password, ...payload } = user;
       const token = this.authService.generateToken(payload);
-      return { token };
+      return { token, user: payload };
     } catch (error) {
       throw new ApiError(error);
     }

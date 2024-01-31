@@ -42,7 +42,11 @@ function SignIn() {
   const mutation = useMutation((data: LoginInputs) => loginApi(data), {
     onSuccess: (data) => {
       setToken(data.token);
-      window.location.href = "/";
+      if (data?.user?.isAdmin) {
+        window.location.href = "/admin/dashboard";
+      } else {
+        window.location.href = "/";
+      }
     },
   });
 

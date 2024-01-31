@@ -9,6 +9,7 @@ import {
 import { borrowEntity } from "../../borrow/entity/borrow.entity";
 import { MembershipEntity } from "../../membership/entity/membership.entity";
 import { Exclude } from "class-transformer";
+import { ReservationEntity } from "../../book/entity/reservation.entity";
 
 @Entity({ name: "users" })
 export class UserEntity {
@@ -46,4 +47,7 @@ export class UserEntity {
   @OneToOne(() => MembershipEntity, (member) => member.user)
   @JoinColumn()
   member: MembershipEntity;
+
+  @OneToMany(() => ReservationEntity, (reservation) => reservation.user)
+  reservations: ReservationEntity[];
 }

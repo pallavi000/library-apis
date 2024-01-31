@@ -3,14 +3,16 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { AuthorEntity } from '../../author/entity/authot.entity';
-import { GenraEntity } from '../../genra/entity/genra.entity';
-import { borrowEntity } from '../../borrow/entity/borrow.entity';
+} from "typeorm";
+import { AuthorEntity } from "../../author/entity/authot.entity";
+import { GenraEntity } from "../../genra/entity/genra.entity";
+import { borrowEntity } from "../../borrow/entity/borrow.entity";
+import { ReservationEntity } from "./reservation.entity";
 
-@Entity('books')
+@Entity("books")
 export class BookEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -30,10 +32,10 @@ export class BookEntity {
   @Column()
   publishedYear: number;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date;
 
   @ManyToOne(() => AuthorEntity, (author) => author.books)
@@ -42,7 +44,9 @@ export class BookEntity {
   @ManyToOne(() => GenraEntity, (genra) => genra.books)
   genra: GenraEntity;
 
-  @OneToOne(() => borrowEntity, (borrow) => borrow.book)
-  @JoinColumn()
-  borrow: borrowEntity;
+  @OneToMany(() => ReservationEntity, (reservation) => reservation.book)
+  reservations: ReservationEntity[];
+
+  @OneToMany(() => borrowEntity, (borrow) => borrow.book)
+  borrows: borrowEntity[];
 }

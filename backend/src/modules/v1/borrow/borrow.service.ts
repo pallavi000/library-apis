@@ -14,15 +14,19 @@ export class BorrowService {
   async createBorrowBook(body: borrowDto) {
     return await this.borrowModal.insert({
       ...body,
+      user: { id: body.user },
+      book: { id: body.book },
     });
   }
 
-  async returnBook(bookId: number, body: borrowDto) {
-    const borrowBook = await this.borrowModal.update(
+  async returnBook(bookId: number, returnDate: Date) {
+    return await this.borrowModal.update(
       { id: bookId },
-      { ...body }
+      {
+        returnDate,
+        isReturned: true,
+      }
     );
-    return "successfully book returned";
   }
 
   async findAllBorrowBook() {
@@ -32,7 +36,7 @@ export class BorrowService {
     return borrowBooks;
   }
 
-  async findBorrowBookById(id: number) {
+  async findBorrowById(id: number) {
     const borrowBook = await this.borrowModal.findOne({
       where: { id },
       relations: ["user", "book"],

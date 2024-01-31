@@ -7,6 +7,7 @@ type LoadingButtonProps = {
   color: ColorVariant;
   title: string;
   isDisabled?: boolean;
+  handleClick?: () => void;
 };
 
 function LoadingButton({
@@ -14,6 +15,7 @@ function LoadingButton({
   color,
   title,
   isDisabled = false,
+  handleClick = () => {},
 }: LoadingButtonProps) {
   return (
     <Button
@@ -21,6 +23,7 @@ function LoadingButton({
       variant="contained"
       color={color}
       type="submit"
+      onClick={handleClick}
     >
       {isLoading ? <CircularProgress size={24} /> : <>{title}</>}
     </Button>

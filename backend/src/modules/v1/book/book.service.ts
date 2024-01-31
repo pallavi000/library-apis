@@ -1,18 +1,45 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BookEntity } from "./entity/book.entity";
-import { Repository } from "typeorm";
+import { MoreThanOrEqual, Repository } from "typeorm";
 import { bookDto } from "./dto/book.dto";
+import { ReservationEntity } from "./entity/reservation.entity";
 
 @Injectable()
 export class BookService {
   constructor(
     @InjectRepository(BookEntity)
-    private readonly bookModel: Repository<BookEntity>
+    private readonly bookModel: Repository<BookEntity>,
+    @InjectRepository(ReservationEntity)
+    private readonly reservationModel: Repository<ReservationEntity>
   ) {}
 
+  filterExpiredBookReservations(book: BookEntity): ReservationEntity[] {
+    return book.reservations.filter(
+      (reservation) => reservation.expirationDate >= new Date()
+    );
+  }
+
   async findAllBook(): Promise<bookDto[]> {
-    const books = await this.bookModel.find({ relations: ["author", "genra"] });
+    const books = await this.bookModel.find({
+      relations: ["author", "genra", "reservations"],
+    });
+    for (const book of books) {
+      book.reservations = this.filterExpiredBookReservations(book);
+    }
+    // const expirationDate = new Date();
+    // const books = await this.bookModel
+    //   .createQueryBuilder("book")
+    //   .leftJoinAndSelect("book.author", "author")
+    //   .leftJoinAndSelect("book.genra", "genra")
+    //   .leftJoinAndSelect(
+    //     "book.reservations",
+    //     "reservation",
+    //     "reservation.expirationDate >= :expirationDate",
+    //     { expirationDate }
+    //   )
+    //   .leftJoinAndSelect("reservation.user", "user")
+    //   .getMany();
     return books;
   }
 
@@ -25,16 +52,18 @@ export class BookService {
     const skip = (page - 1) * limit;
     const where: any = {};
     if (genre) {
-      where.genra = genre;
+      where.genra = {};
+      where.genra.id = genre;
     }
     if (author) {
-      where.author = author;
+      where.author = {};
+      where.author.id = author;
     }
     return await this.bookModel.find({
       where: where,
       take: limit,
       skip,
-      relations: ["author", "genra"],
+      relations: ["author", "genra", "reservations"],
     });
   }
 
@@ -47,15 +76,16 @@ export class BookService {
   async findBookById(id: number) {
     const book = await this.bookModel.findOne({
       where: { id },
-      relations: ["author", "genra"],
+      relations: ["author", "genra", "reservations"],
     });
+    book.reservations = this.filterExpiredBookReservations(book);
     return book;
   }
 
   async findAvailableBook() {
     const books = await this.bookModel.find({
       where: { isAvailable: true },
-      relations: ["author", "genra"],
+      relations: ["author", "genra", "reservations"],
     });
     return books;
   }
@@ -63,7 +93,7 @@ export class BookService {
   async findBookByTitle(title: string) {
     const books = await this.bookModel.find({
       where: { title: title },
-      relations: ["author", "genra"],
+      relations: ["author", "genra", "reservations"],
     });
     return books;
   }
@@ -77,7 +107,7 @@ export class BookService {
         genra: { id: genreId },
         author: { id: authorId },
       },
-      relations: ["author", "genra"],
+      relations: ["author", "genra", "reservations"],
     });
     return books;
   }
@@ -86,7 +116,43 @@ export class BookService {
     return await this.bookModel.update({ id }, { ...body });
   }
 
+  async markBookUnavailable(id: number) {
+    return await this.bookModel.update(
+      { id },
+      {
+        isAvailable: false,
+      }
+    );
+  }
+
+  async markBookAvailable(id: number) {
+    return await this.bookModel.update(
+      { id },
+      {
+        isAvailable: true,
+      }
+    );
+  }
+
   async deleteBookById(id: number) {
     return await this.bookModel.delete({ id });
+  }
+
+  async reserveBook(bookId: number, userId: number, expirationDate: Date) {
+    return await this.reservationModel.insert({
+      book: { id: bookId },
+      user: { id: userId },
+      expirationDate,
+    });
+  }
+
+  isBookReserved(book: BookEntity, userId: number): boolean {
+    if (!book.reservations.length) return false;
+    const reservations = this.filterExpiredBookReservations(book);
+    const reservationsBySomeoneElse = reservations.filter(
+      (reservation) => reservation.userId != userId
+    );
+    if (reservationsBySomeoneElse.length) return true;
+    return false;
   }
 }

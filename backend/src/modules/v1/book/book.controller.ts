@@ -13,6 +13,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from "@nestjs/common";
 import { BookService } from "./book.service";
@@ -20,6 +21,8 @@ import { bookDto } from "./dto/book.dto";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
 import { ApiError } from "src/exceptions/api-error.exception";
+import { IExpressRequest } from "src/@types/auth";
+import { RESERVATION_EXPIRY_DAY } from "src/utils/constant";
 
 @ApiTags("Book")
 @Controller("books")
@@ -67,14 +70,13 @@ export class BookController {
   }
 
   @Post("/")
-  // @UseGuards(AdminAuthGuard)
+  @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED,
   })
   @ApiBearerAuth()
   async addBook(@Body() body: bookDto): Promise<any> {
-    console.log("hello");
     try {
       const book = await this.bookService.createBook(body);
       return {};
@@ -83,8 +85,30 @@ export class BookController {
     }
   }
 
+  @Post("/reserve/:id")
+  @UseGuards(AdminAuthGuard)
+  @HttpCode(HttpStatus.CREATED)
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+  })
+  @ApiBearerAuth()
+  async reserveBook(
+    @Param() param: { id: number },
+    @Req() req: IExpressRequest
+  ): Promise<any> {
+    try {
+      const { id } = param;
+      const expirationDate = new Date();
+      expirationDate.setDate(new Date().getDate() + RESERVATION_EXPIRY_DAY);
+      await this.bookService.reserveBook(id, req.user.id, expirationDate);
+      return {};
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
+
   @Put("/:id")
-  // @UseGuards(AdminAuthGuard)
+  @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   async updateBookById(@Param() param: any, @Body() body: bookDto) {
     const { id } = param;
@@ -97,9 +121,9 @@ export class BookController {
   }
 
   @Delete("/:id")
-  // @UseGuards(AdminAuthGuard)
+  @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  async deleteBookById(@Param() param) {
+  async deleteBookById(@Param() param: any) {
     const { id } = param;
     try {
       const book = await this.bookService.deleteBookById(id);

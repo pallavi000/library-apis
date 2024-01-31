@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteUser } from "../../../api/user";
+import { getAllUsersApi } from "../../../api/user";
 import {
   Button,
   Card,
   CardContent,
   Container,
+  IconButton,
   Stack,
   Table,
   TableBody,
@@ -13,37 +14,34 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-
-import BorderColorIcon from "@mui/icons-material/BorderColor";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { fetchAllBorrows } from "../../../api/borrow";
 import { TBorrow } from "../../../@types/borrow";
+import { fetchAllBook } from "../../../api/home";
+import IssueBookModal from "./IssueBookModal";
+import { fetchAllBorrows, returnBorrowBook } from "../../../api/borrow";
+import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
 
 function Borrows() {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   const queryClient = useQueryClient();
-
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { data: books } = useQuery(["books"], fetchAllBook);
+  const { data: users } = useQuery(["users"], getAllUsersApi);
   const {
     isLoading,
     isSuccess,
     data: borrows,
   } = useQuery(["borrows"], fetchAllBorrows);
-
-  const mutation = useMutation((id: number) => deleteUser(id), {
+  const mutation = useMutation((id: number) => returnBorrowBook(id), {
     onSuccess: () => {
-      // Invalidate the queries related to authors after successful deletion
-      queryClient.invalidateQueries("borrows");
+      // new user has been added | this runs the fetch api again.
+      queryClient.invalidateQueries(["books"]);
+      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries(["borrows"]);
     },
   });
-
-  const handleDelete = (id: number) => {
-    mutation.mutate(id);
-  };
 
   return (
     <Container component="main" maxWidth="xl">
@@ -53,7 +51,7 @@ function Borrows() {
         justifyContent="space-between"
         mb={5}
       >
-        <Typography variant="h6">Borrows</Typography>
+        <Typography variant="h6">Issued Books</Typography>
         <Button
           size="small"
           variant="contained"
@@ -63,6 +61,12 @@ function Borrows() {
           Issue Book
         </Button>
       </Stack>
+      <IssueBookModal
+        isOpen={isAddModalOpen}
+        handleClose={() => setIsAddModalOpen(false)}
+        users={users}
+        books={books}
+      />
 
       <Card>
         <CardContent>
@@ -73,7 +77,9 @@ function Borrows() {
                   <TableCell>ID</TableCell>
                   <TableCell>Book</TableCell>
                   <TableCell>User</TableCell>
-                  <TableCell>Book Issue Date</TableCell>
+                  <TableCell>Issue Date</TableCell>
+                  <TableCell>Due Date</TableCell>
+                  <TableCell>Return Date</TableCell>
                   <TableCell>Action</TableCell>
                 </TableRow>
               </TableHead>
@@ -85,15 +91,29 @@ function Borrows() {
                       <TableCell>{borrow.book?.title}</TableCell>
                       <TableCell>{borrow.user?.email}</TableCell>
                       <TableCell>{borrow.borrowDate || "NULL"}</TableCell>
+                      <TableCell>{borrow.dueDate || "NULL"}</TableCell>
+                      <TableCell>
+                        {borrow?.isReturned ? (
+                          <>{borrow.returnDate || "NULL"}</>
+                        ) : (
+                          <>Not Yet Returned</>
+                        )}
+                      </TableCell>
                       <TableCell sx={{ display: "flex", alignItems: "center" }}>
-                        <Button size="small">
-                          <BorderColorIcon color="warning" />
-                        </Button>
-
-                        <Button onClick={() => handleDelete(borrow.id)}>
-                          <DeleteIcon color="error" />
-                        </Button>
-                      </TableCell>{" "}
+                        {!borrow.isReturned ? (
+                          <Tooltip title="Initiate Book Return">
+                            <IconButton
+                              size="small"
+                              disabled={mutation.isLoading}
+                              onClick={() => mutation.mutate(borrow.id)}
+                            >
+                              <AssignmentReturnIcon color="warning" />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          <>&nbsp;</>
+                        )}
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>

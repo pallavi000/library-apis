@@ -19,8 +19,10 @@ import { useGlobalContext } from "../../context/GlobalContext";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
   const { user, logout } = useGlobalContext();
 
   // user profile icon click popover state
@@ -44,24 +46,30 @@ function Header() {
     <AppBar position="static" sx={{ marginBottom: 2 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
-          <Stack direction={"row"} alignItems={"center"}>
-            <AdbIcon sx={{ mr: 1, ml: { xs: 2, lg: 0 } }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              sx={{
-                mr: 2,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
+          <Tooltip title="Logo" onClick={() => navigate("/")}>
+            <Stack
+              direction={"row"}
+              alignItems={"center"}
+              sx={{ cursor: "pointer" }}
             >
-              Logo
-            </Typography>
-          </Stack>
+              <AdbIcon sx={{ mr: 1, ml: { xs: 2, lg: 0 } }} />
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                sx={{
+                  mr: 2,
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                Logo
+              </Typography>
+            </Stack>
+          </Tooltip>
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             {/* <CustomSearch /> */}
           </Box>

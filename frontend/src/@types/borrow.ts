@@ -6,5 +6,13 @@ export type TBorrow = {
   user: TUser;
   book: TBook;
   borrowDate: string;
+  dueDate: string;
   returnDate: string;
+  isReturned: boolean;
+};
+
+export type TBorrowInputs = {
+  user: number;
+  book: number;
+  dueDate: string;
 };

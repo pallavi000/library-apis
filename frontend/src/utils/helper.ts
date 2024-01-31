@@ -31,3 +31,7 @@ export const showCustomToastr = (message: string, variant: VariantType) => {
 export const queryBuilder = (key: string, arr: string[] | number[]) => {
   return arr.map((a) => `${key}=${encodeURIComponent(a)}`).join("&");
 };
+
+export function generateMUIAutocompleteOptions<T>(arr: T[], key: keyof T) {
+  return arr.map((a) => ({ label: a[key] }));
+}

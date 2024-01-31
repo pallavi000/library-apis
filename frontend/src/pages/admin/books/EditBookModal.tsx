@@ -213,7 +213,7 @@ function EditBookModal({ isOpen, handleClose, id }: EditBookModelProps) {
               <TextField
                 {...field}
                 label="Book published year"
-                placeholder="YYYY-MM-DD"
+                placeholder="YYYY"
                 variant="outlined"
                 defaultValue={isSuccess && book ? book.publishedYear : ""}
                 error={Boolean(errors.publishedYear)}

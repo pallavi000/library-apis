@@ -13,6 +13,7 @@ import Authors from "../pages/admin/authors/Authors";
 import Genres from "../pages/admin/genres/Genres";
 import Books from "../pages/admin/books/Books";
 import Borrows from "../pages/admin/borrows/Borrow";
+import AdminProtected from "./AdminProtected";
 
 function Navigation() {
   return (
@@ -29,13 +30,15 @@ function Navigation() {
 
       {/* Admin Routes */}
       <Route element={<AdminDashboardLayout />}>
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/users" element={<Users />} />
-        <Route path="/admin/membership" element={<Membership />} />
-        <Route path="/admin/authors" element={<Authors />} />
-        <Route path="/admin/genres" element={<Genres />} />
-        <Route path="/admin/books" element={<Books />} />
-        <Route path="/admin/borrows" element={<Borrows />} />
+        <Route element={<AdminProtected />}>
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/membership" element={<Membership />} />
+          <Route path="/admin/authors" element={<Authors />} />
+          <Route path="/admin/genres" element={<Genres />} />
+          <Route path="/admin/books" element={<Books />} />
+          <Route path="/admin/borrows" element={<Borrows />} />
+        </Route>
       </Route>
     </Routes>
   );

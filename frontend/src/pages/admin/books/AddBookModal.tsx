@@ -184,7 +184,7 @@ function AddBookModal({ isOpen, handleClose }: AddBookModelProps) {
               <TextField
                 {...field}
                 label="Book published year"
-                placeholder="YYYY-MM-DD"
+                placeholder="YYYY"
                 variant="outlined"
                 error={Boolean(errors.publishedYear)}
                 helperText={errors.publishedYear?.message}
