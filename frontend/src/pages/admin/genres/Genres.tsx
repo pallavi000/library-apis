@@ -15,15 +15,22 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { TGenre } from "../../../@types/genre";
-import { Add } from "@mui/icons-material";
-import { fetchAllGenre } from "../../../api/home";
-import AddGenreModal from "./AddGenreModal";
 
+//icons
+import { Add } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditGenreModal from "./EditGenreModal";
+
+//types
+import { TGenre } from "../../../@types/genre";
+
+//api
+import { fetchAllGenre } from "../../../api/home";
 import { deleteGenre } from "../../../api/genre";
+
+//components
+import AddGenreModal from "./AddGenreModal";
+import EditGenreModal from "./EditGenreModal";
 
 function Genres() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

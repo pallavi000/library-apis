@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getAllUsersApi } from "../../../api/user";
+
 import {
   Button,
   Card,
@@ -18,11 +18,18 @@ import {
   Typography,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { TBorrow } from "../../../@types/borrow";
-import { fetchAllBook } from "../../../api/home";
-import IssueBookModal from "./IssueBookModal";
-import { fetchAllBorrows, returnBorrowBook } from "../../../api/borrow";
 import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
+
+//types
+import { TBorrow } from "../../../@types/borrow";
+
+//api
+import { getAllUsersApi } from "../../../api/user";
+import { fetchAllBook } from "../../../api/home";
+import { fetchAllBorrows, returnBorrowBook } from "../../../api/borrow";
+
+//component
+import IssueBookModal from "./IssueBookModal";
 
 function Borrows() {
   const queryClient = useQueryClient();
@@ -42,7 +49,7 @@ function Borrows() {
       queryClient.invalidateQueries(["borrows"]);
     },
   });
-khai ekxin bahira herxu huss nai herxu vanya
+
   return (
     <Container component="main" maxWidth="xl">
       <Stack

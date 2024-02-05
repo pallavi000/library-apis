@@ -1,4 +1,5 @@
-import CustomModal from "../../../component/CustomModal";
+import { useEffect } from "react";
+
 import {
   Box,
   Button,
@@ -14,10 +15,16 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import { useMutation, useQueryClient } from "react-query";
+
+//componet
 import LoadingButton from "../../../component/LoadingButton";
+import CustomModal from "../../../component/CustomModal";
+
+//type
 import { TMemberInputs, TUser } from "../../../@types/user";
+
+//api
 import { addNewMemberShip } from "../../../api/member";
-import { useEffect } from "react";
 
 // yup validation schema
 const validationSchema = yup.object().shape({

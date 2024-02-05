@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  deleteMembership,
-  fetchAllInactiveMemberships,
-  updateMembership,
-} from "../../../api/member";
+
 import {
   Button,
   Card,
@@ -22,12 +18,26 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { TMember, TMemberInputs } from "../../../@types/user";
+//icons
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { Add } from "@mui/icons-material";
+
+//types
+import { TMember, TMemberInputs } from "../../../@types/user";
+
+//api
+import {
+  deleteMembership,
+  fetchAllInactiveMemberships,
+  updateMembership,
+} from "../../../api/member";
 import { fetchUsersWithoutMembership } from "../../../api/user";
+
+//component
 import AddMember from "./AddMember";
+
+//helper
 import { showCustomToastr } from "../../../utils/helper";
 
 function Membership() {

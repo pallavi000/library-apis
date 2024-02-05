@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getAllUsersApi } from "../../../api/user";
 import {
   Button,
   Card,
@@ -16,15 +15,21 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { TGenre } from "../../../@types/genre";
-import { Add } from "@mui/icons-material";
-import { fetchAllBook, fetchAllGenre } from "../../../api/home";
-import { TBook } from "../../../@types/book";
-import AddBookModal from "./AddBookModal";
-import { deleteBook } from "../../../api/book";
 
+//icons
+import { Add } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+//api
+import { fetchAllBook, fetchAllGenre } from "../../../api/home";
+
+//types
+import { TBook } from "../../../@types/book";
+import { deleteBook } from "../../../api/book";
+
+//component
+import AddBookModal from "./AddBookModal";
 import EditBookModal from "./EditBookModal";
 
 function Books() {

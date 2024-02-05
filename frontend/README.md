@@ -1,30 +1,73 @@
-# React + TypeScript + Vite
+# Introduction
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Library Management system build using React Js , Nest Js and MySql.
+The system allows users to perform CRUD operations on Books,Genre, Author,Users,Member. User can borrow their favorite book and return before due date.
+We have also implemented the features of authentication and authorization. Proper permissions and role must be provided to provided to access protected and sensitive api.
 
-Currently, two official plugins are available:
+[![ReactJS](https://img.shields.io/badge/react.js-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+![NestJS](https://img.shields.io/badge/nest.js-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of contents
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+  
 
-## Expanding the ESLint configuration
+## Tech Stack
+- React Js
+- MUI
+- Nest Js
+- Typescript
+- MySql
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+## Getting started
+- Clone this project using `git clone ` command;
+- Navigate inside frontend folder `cd frontend`
+- Install the project dependencies with `npm install`;
+- Run the project in dev mode with `npm run dev`.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+- Navigate inside Backend folder `cd backend`
+- Install the project dependencies with `npm install`;
+- Create your `.env` from `.env.example` either manually or with `cp .env.example .env`
+- Fill the `.env` file with your PORT, JWT_SECRET and JWT_EXPIRES_IN;
+- Run the project in dev mode with `npm run start:dev`.
+  
+
+## Project structure
+
+```
+.
+├── frontend ├── public
+             ├── src  |── types
+                      ├── api
+                      ├── assets
+                      ├── component
+                      ├── constants
+                      ├── context
+                      ├── hooks
+                      ├── pages
+                      ├── routes
+                      ├── theme
+                      ├── utils
+
+├── backend ├── config
+            ├── types
+            ├── config
+            ├── database
+            ├── exception
+            ├── filters
+            ├── guards
+            ├── interceptors
+            ├── middleware
+            ├── models
+            ├── utils
+            ├── test
+            └── utils
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## swagger docs
+- run the project locally.
+- `http://localhost:5000/api/v1/docs#/`

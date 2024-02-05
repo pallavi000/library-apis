@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { deleteUser, getAllUsersApi } from "../../../api/user";
 import {
   Button,
   Card,
@@ -15,12 +14,20 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { TUser } from "../../../@types/user";
-import { Add } from "@mui/icons-material";
-import AddUserModal from "./AddUserModal";
 
+//icons
+import { Add } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+//types
+import { TUser } from "../../../@types/user";
+
+//component
+import AddUserModal from "./AddUserModal";
+
+//api
+import { deleteUser, getAllUsersApi } from "../../../api/user";
 
 function Users() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

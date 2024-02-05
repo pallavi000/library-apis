@@ -1,12 +1,18 @@
-import CustomModal from "../../../component/CustomModal";
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import { useMutation, useQueryClient } from "react-query";
+
+//types
 import { RegisterInputs } from "../../../@types/user";
+
+//api
 import { registerApi } from "../../../api/auth";
+
+//components
 import LoadingButton from "../../../component/LoadingButton";
+import CustomModal from "../../../component/CustomModal";
 
 // yup validation schema
 const validationSchema = yup.object().shape({
