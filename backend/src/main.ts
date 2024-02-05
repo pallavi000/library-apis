@@ -1,15 +1,20 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-import { config } from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
-import { PORT } from './utils/constant';
-import { LoggingMiddleware } from './middlewares/logging/logging.middleware';
-import { AdminLogginsInterceptor } from './interceptors/admin-loggins/admin-loggins.interceptor';
-import { ErrorHandlerFilter } from './filters/error-handler/error-handler.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { config } from 'dotenv';
 
-// middleware -> guard -> interceptors -> pipes -> controller -> filters
+//module
+import { AppModule } from './app.module';
+
+// interceptor
+import { AdminLogginsInterceptor } from './interceptors/admin-loggins/admin-loggins.interceptor';
+
+//error handler
+import { ErrorHandlerFilter } from './filters/error-handler/error-handler.filter';
+
+//constant
+import { PORT } from './utils/constant';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

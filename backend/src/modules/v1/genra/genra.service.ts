@@ -1,14 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { GenraEntity } from "./entity/genra.entity";
-import { Repository } from "typeorm";
-import { InjectRepository } from "@nestjs/typeorm";
-import { genraDto } from "./dto/genra.dto";
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
+//entity
+import { GenraEntity } from './entity/genra.entity';
+
+//dto
+import { genraDto } from './dto/genra.dto';
 
 @Injectable()
 export class GenraService {
   constructor(
     @InjectRepository(GenraEntity)
-    private readonly genraModal: Repository<GenraEntity>
+    private readonly genraModal: Repository<GenraEntity>,
   ) {}
 
   async createGenra(body: genraDto) {

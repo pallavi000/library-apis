@@ -1,9 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { BookEntity } from "./entity/book.entity";
-import { MoreThanOrEqual, Repository } from "typeorm";
-import { bookDto } from "./dto/book.dto";
-import { ReservationEntity } from "./entity/reservation.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
+
+//entity
+import { BookEntity } from './entity/book.entity';
+import { ReservationEntity } from './entity/reservation.entity';
+
+//dto
+import { bookDto } from './dto/book.dto';
 
 @Injectable()
 export class BookService {
@@ -11,18 +15,18 @@ export class BookService {
     @InjectRepository(BookEntity)
     private readonly bookModel: Repository<BookEntity>,
     @InjectRepository(ReservationEntity)
-    private readonly reservationModel: Repository<ReservationEntity>
+    private readonly reservationModel: Repository<ReservationEntity>,
   ) {}
 
   filterExpiredBookReservations(book: BookEntity): ReservationEntity[] {
     return book.reservations.filter(
-      (reservation) => reservation.expirationDate >= new Date()
+      (reservation) => reservation.expirationDate >= new Date(),
     );
   }
 
   async findAllBook(): Promise<bookDto[]> {
     const books = await this.bookModel.find({
-      relations: ["author", "genra", "reservations"],
+      relations: ['author', 'genra', 'reservations'],
     });
     for (const book of books) {
       book.reservations = this.filterExpiredBookReservations(book);
@@ -47,7 +51,7 @@ export class BookService {
     page: number = 1,
     limit: number = 10,
     genre: number = 0,
-    author: number = 0
+    author: number = 0,
   ): Promise<bookDto[]> {
     const skip = (page - 1) * limit;
     const where: any = {};
@@ -63,7 +67,7 @@ export class BookService {
       where: where,
       take: limit,
       skip,
-      relations: ["author", "genra", "reservations"],
+      relations: ['author', 'genra', 'reservations'],
     });
   }
 
@@ -76,7 +80,7 @@ export class BookService {
   async findBookById(id: number) {
     const book = await this.bookModel.findOne({
       where: { id },
-      relations: ["author", "genra", "reservations"],
+      relations: ['author', 'genra', 'reservations'],
     });
     book.reservations = this.filterExpiredBookReservations(book);
     return book;
@@ -85,7 +89,7 @@ export class BookService {
   async findAvailableBook() {
     const books = await this.bookModel.find({
       where: { isAvailable: true },
-      relations: ["author", "genra", "reservations"],
+      relations: ['author', 'genra', 'reservations'],
     });
     return books;
   }
@@ -93,21 +97,21 @@ export class BookService {
   async findBookByTitle(title: string) {
     const books = await this.bookModel.find({
       where: { title: title },
-      relations: ["author", "genra", "reservations"],
+      relations: ['author', 'genra', 'reservations'],
     });
     return books;
   }
 
   async findBooksByFilter(
     genreId: number,
-    authorId: number
+    authorId: number,
   ): Promise<bookDto[]> {
     const books = await this.bookModel.find({
       where: {
         genra: { id: genreId },
         author: { id: authorId },
       },
-      relations: ["author", "genra", "reservations"],
+      relations: ['author', 'genra', 'reservations'],
     });
     return books;
   }
@@ -121,7 +125,7 @@ export class BookService {
       { id },
       {
         isAvailable: false,
-      }
+      },
     );
   }
 
@@ -130,7 +134,7 @@ export class BookService {
       { id },
       {
         isAvailable: true,
-      }
+      },
     );
   }
 
@@ -150,7 +154,7 @@ export class BookService {
     if (!book.reservations.length) return false;
     const reservations = this.filterExpiredBookReservations(book);
     const reservationsBySomeoneElse = reservations.filter(
-      (reservation) => reservation.userId != userId
+      (reservation) => reservation.userId != userId,
     );
     if (reservationsBySomeoneElse.length) return true;
     return false;

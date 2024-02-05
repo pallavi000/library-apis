@@ -13,10 +13,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+
+//context
 import { useGlobalContext } from "../context/GlobalContext";
+
+//skeleton
 import BookDetailSkeleton from "../component/skeletons/BookDetailSkeleton";
+
+//component
 import LoadingButton from "../component/LoadingButton";
 import CustomBreadcrumb from "../component/CustomBreadcrumb";
+
+//api
 import { reserveBook } from "../api/book";
 
 function BookDetail() {

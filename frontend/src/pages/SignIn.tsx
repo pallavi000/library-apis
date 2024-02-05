@@ -8,12 +8,20 @@ import {
 } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
-import { LoginInputs } from "../@types/user";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "react-router-dom";
-import { loginApi } from "../api/auth";
-import { useGlobalContext } from "../context/GlobalContext";
 import { useMutation } from "react-query";
+
+//types
+import { LoginInputs } from "../@types/user";
+
+//api
+import { loginApi } from "../api/auth";
+
+//context
+import { useGlobalContext } from "../context/GlobalContext";
+
+//component
 import LoadingButton from "../component/LoadingButton";
 
 // yup validation schema

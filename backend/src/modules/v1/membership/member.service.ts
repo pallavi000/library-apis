@@ -1,26 +1,29 @@
-import { Injectable } from "@nestjs/common";
-import { UserService } from "../user/user.service";
-import { InjectRepository } from "@nestjs/typeorm";
-import { MembershipEntity } from "./entity/membership.entity";
-import { Repository } from "typeorm";
-import { memberDto } from "./dto/member.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+//entity
+import { MembershipEntity } from './entity/membership.entity';
+
+// dto
+import { memberDto } from './dto/member.dto';
 
 @Injectable()
 export class MemberService {
   constructor(
     @InjectRepository(MembershipEntity)
-    private readonly memberModal: Repository<MembershipEntity>
+    private readonly memberModal: Repository<MembershipEntity>,
   ) {}
 
   async findAllMember() {
-    const members = await this.memberModal.find({ relations: ["user"] });
+    const members = await this.memberModal.find({ relations: ['user'] });
     return members;
   }
 
   async findInactiveMembers() {
     const members = await this.memberModal.find({
       where: { isActive: false },
-      relations: ["user"],
+      relations: ['user'],
     });
     return members;
   }
@@ -28,7 +31,7 @@ export class MemberService {
   async findMemberById(id: number) {
     const member = await this.memberModal.findOne({
       where: { id },
-      relations: ["user"],
+      relations: ['user'],
     });
     return member;
   }
@@ -44,7 +47,7 @@ export class MemberService {
   async findMemberByUserId(userId: number) {
     const member = await this.memberModal.findOne({
       where: { user: { id: userId } },
-      relations: ["user"],
+      relations: ['user'],
     });
     return member;
   }
@@ -55,7 +58,7 @@ export class MemberService {
       {
         ...body,
         user: { id: body.user },
-      }
+      },
     );
   }
 

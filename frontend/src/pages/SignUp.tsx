@@ -7,14 +7,22 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { RegisterInputs } from "../@types/user";
-import { useGlobalContext } from "../context/GlobalContext";
 import { Link, useNavigate } from "react-router-dom";
-import { registerApi } from "../api/auth";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import { useMutation } from "react-query";
+import * as yup from "yup";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+
+//types
+import { RegisterInputs } from "../@types/user";
+
+//context
+import { useGlobalContext } from "../context/GlobalContext";
+
+//api
+import { registerApi } from "../api/auth";
+
+//component
 import LoadingButton from "../component/LoadingButton";
 
 // yup validation schema

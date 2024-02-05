@@ -10,25 +10,31 @@ import {
   Post,
   Put,
   UseGuards,
-} from "@nestjs/common";
-import { MemberService } from "./member.service";
-import { memberDto } from "./dto/member.dto";
-import { AuthGuard } from "src/guards/auth-jwt/auth-jwt.guard";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
-import { ApiError } from "src/exceptions/api-error.exception";
-import { ApiTags } from "@nestjs/swagger";
-import { MembershipEntity } from "./entity/membership.entity";
-import { UserService } from "../user/user.service";
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags("Member")
-@Controller("members")
+//service
+import { MemberService } from './member.service';
+import { UserService } from '../user/user.service';
+
+//dto
+import { memberDto } from './dto/member.dto';
+
+//error filtering
+import { ApiError } from 'src/exceptions/api-error.exception';
+
+//entity
+import { MembershipEntity } from './entity/membership.entity';
+
+@ApiTags('Member')
+@Controller('members')
 export class MemberController {
   constructor(
     private readonly memberService: MemberService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
-  @Get("/")
+  @Get('/')
   async findAllMembers(): Promise<MembershipEntity[]> {
     try {
       const members = await this.memberService.findAllMember();
@@ -38,7 +44,7 @@ export class MemberController {
     }
   }
 
-  @Get("/inactive")
+  @Get('/inactive')
   async findInactiveMembers(): Promise<MembershipEntity[]> {
     try {
       const members = await this.memberService.findInactiveMembers();
@@ -48,14 +54,14 @@ export class MemberController {
     }
   }
 
-  @Post("/")
+  @Post('/')
   async addNewMember(@Body() body: memberDto) {
     try {
       const hasAlreadyMembership = await this.memberService.findMemberByUserId(
-        body.user
+        body.user,
       );
       if (hasAlreadyMembership) {
-        throw new BadRequestException("User already has membership.");
+        throw new BadRequestException('User already has membership.');
       }
       const member = await this.memberService.createMember(body);
       return member;
@@ -64,7 +70,7 @@ export class MemberController {
     }
   }
 
-  @Get("/:id")
+  @Get('/:id')
   async findMemberById(@Param() param: any): Promise<MembershipEntity> {
     try {
       const { id } = param;
@@ -75,7 +81,7 @@ export class MemberController {
     }
   }
 
-  @Get("/user/:id")
+  @Get('/user/:id')
   async findMemberByUserId(@Param() param: any) {
     const { id } = param;
     try {
@@ -86,10 +92,10 @@ export class MemberController {
     }
   }
 
-  @Put("/:id")
+  @Put('/:id')
   async activateMembership(
     @Body() body: memberDto,
-    @Param() param: { id: number }
+    @Param() param: { id: number },
   ) {
     try {
       const { id } = param;
@@ -103,7 +109,7 @@ export class MemberController {
     }
   }
 
-  @Delete("/:id")
+  @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteMembership(@Param() param: { id: number }) {
     try {

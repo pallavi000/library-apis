@@ -6,11 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import LoadingButton from "../../../component/LoadingButton";
 import { TAuthorInputs } from "../../../@types/author";
-import {
-  addNewAuthor,
-  fetchAuthorById,
-  updateAuthor,
-} from "../../../api/author";
+import { fetchAuthorById, updateAuthor } from "../../../api/author";
 import React from "react";
 
 // yup validation schema

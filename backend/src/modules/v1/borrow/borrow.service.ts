@@ -1,14 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { borrowEntity } from "./entity/borrow.entity";
-import { Repository } from "typeorm";
-import { borrowDto } from "./dto/borrow.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+//entity
+import { borrowEntity } from './entity/borrow.entity';
+
+//dto
+import { borrowDto } from './dto/borrow.dto';
 
 @Injectable()
 export class BorrowService {
   constructor(
     @InjectRepository(borrowEntity)
-    private readonly borrowModal: Repository<borrowEntity>
+    private readonly borrowModal: Repository<borrowEntity>,
   ) {}
 
   async createBorrowBook(body: borrowDto) {
@@ -25,13 +29,13 @@ export class BorrowService {
       {
         returnDate,
         isReturned: true,
-      }
+      },
     );
   }
 
   async findAllBorrowBook() {
     const borrowBooks = await this.borrowModal.find({
-      relations: ["user", "book"],
+      relations: ['user', 'book'],
     });
     return borrowBooks;
   }
@@ -39,7 +43,7 @@ export class BorrowService {
   async findBorrowById(id: number) {
     const borrowBook = await this.borrowModal.findOne({
       where: { id },
-      relations: ["user", "book"],
+      relations: ['user', 'book'],
     });
     return borrowBook;
   }

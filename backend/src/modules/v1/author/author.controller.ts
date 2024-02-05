@@ -9,19 +9,27 @@ import {
   Post,
   Put,
   UseGuards,
-} from "@nestjs/common";
-import { AuthorService } from "./author.service";
-import { authorDto } from "./dto/author.dto";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { ApiError } from "src/exceptions/api-error.exception";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags("Author")
-@Controller("authors")
+//service
+import { AuthorService } from './author.service';
+
+//dto
+import { authorDto } from './dto/author.dto';
+
+//error filtering
+import { ApiError } from 'src/exceptions/api-error.exception';
+
+//auth-guard
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+
+@ApiTags('Author')
+@Controller('authors')
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
-  @Get("/")
+  @Get('/')
   @UseGuards(AdminAuthGuard)
   @ApiResponse({
     status: HttpStatus.OK,
@@ -37,7 +45,7 @@ export class AuthorController {
     }
   }
 
-  @Post("/")
+  @Post('/')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -53,7 +61,7 @@ export class AuthorController {
     }
   }
 
-  @Put("/:id")
+  @Put('/:id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(201)
   @ApiResponse({
@@ -70,7 +78,7 @@ export class AuthorController {
     }
   }
 
-  @Delete("/:id")
+  @Delete('/:id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
@@ -87,8 +95,8 @@ export class AuthorController {
     }
   }
 
-  @Get("/:id")
-  @Get("/")
+  @Get('/:id')
+  @Get('/')
   @ApiResponse({
     status: HttpStatus.OK,
     type: authorDto,

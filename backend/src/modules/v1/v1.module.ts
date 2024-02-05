@@ -1,13 +1,15 @@
-import { Module } from "@nestjs/common";
-import { UserModule } from "./user/user.module";
-import { AuthModule } from "./auth/auth.module";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { BookModule } from "./book/book.module";
-import { GenraModule } from "./genra/genra.module";
-import { AuthorModel } from "./author/author.module";
-import { BorrowModule } from "./borrow/borrow.module";
-import connectionSource from "src/config/typeorm";
-import { MemberModule } from "./membership/member.module";
+import { Module } from '@nestjs/common';
+import connectionSource from 'src/config/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+//module
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { BookModule } from './book/book.module';
+import { GenraModule } from './genra/genra.module';
+import { AuthorModel } from './author/author.module';
+import { BorrowModule } from './borrow/borrow.module';
+import { MemberModule } from './membership/member.module';
 
 @Module({
   imports: [

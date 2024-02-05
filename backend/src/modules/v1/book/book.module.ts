@@ -1,10 +1,16 @@
-import { Module } from "@nestjs/common";
-import { BookController } from "./book.controller";
-import { BookService } from "./book.service";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { BookEntity } from "./entity/book.entity";
-import { JwtService } from "@nestjs/jwt";
-import { ReservationEntity } from "./entity/reservation.entity";
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+
+//controller
+import { BookController } from './book.controller';
+
+//service
+import { BookService } from './book.service';
+
+//entity
+import { BookEntity } from './entity/book.entity';
+import { ReservationEntity } from './entity/reservation.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([BookEntity, ReservationEntity])],

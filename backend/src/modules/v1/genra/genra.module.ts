@@ -1,9 +1,15 @@
-import { Module } from "@nestjs/common";
-import { GenraController } from "./genra.controller";
-import { GenraService } from "./genra.service";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { GenraEntity } from "./entity/genra.entity";
-import { JwtService } from "@nestjs/jwt";
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+
+//controller
+import { GenraController } from './genra.controller';
+
+//service
+import { GenraService } from './genra.service';
+
+//entity
+import { GenraEntity } from './entity/genra.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([GenraEntity])],

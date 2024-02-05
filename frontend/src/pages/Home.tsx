@@ -13,11 +13,13 @@ import {
 import { fetchAllBook, fetchBooksPagination } from "../api/home";
 import { TBook } from "../@types/book";
 import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
 
 // icons
 import GridViewIcon from "@mui/icons-material/GridView";
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+
+//component
 import AppLoader from "../component/AppLoader";
 import SidebarFilter from "../component/SidebarFilter";
 import BookCard from "../component/BookCard";

@@ -15,21 +15,31 @@ import {
   Query,
   Req,
   UseGuards,
-} from "@nestjs/common";
-import { BookService } from "./book.service";
-import { bookDto } from "./dto/book.dto";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
-import { ApiError } from "src/exceptions/api-error.exception";
-import { IExpressRequest } from "src/@types/auth";
-import { RESERVATION_EXPIRY_DAY } from "src/utils/constant";
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IExpressRequest } from 'src/@types/auth';
 
-@ApiTags("Book")
-@Controller("books")
+//service
+import { BookService } from './book.service';
+
+//dto
+import { bookDto } from './dto/book.dto';
+
+//auth-guard
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+
+//error-filtering
+import { ApiError } from 'src/exceptions/api-error.exception';
+
+//constant
+import { RESERVATION_EXPIRY_DAY } from 'src/utils/constant';
+
+@ApiTags('Book')
+@Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
-  @Get("/")
+  @Get('/')
   @ApiResponse({
     status: HttpStatus.OK,
     type: bookDto,
@@ -44,24 +54,24 @@ export class BookController {
     }
   }
 
-  @Get("/get")
+  @Get('/get')
   @ApiResponse({
     status: HttpStatus.OK,
     type: bookDto,
     isArray: true,
   })
   async fetchBooksPagination(
-    @Query("page", ParseIntPipe) page: number,
-    @Query("limit", ParseIntPipe) limit: number,
-    @Query("genre", ParseIntPipe) genre: number,
-    @Query("author", ParseIntPipe) author: number
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+    @Query('genre', ParseIntPipe) genre: number,
+    @Query('author', ParseIntPipe) author: number,
   ) {
     try {
       const books = await this.bookService.findBooksPagination(
         page,
         limit,
         genre,
-        author
+        author,
       );
       return books;
     } catch (error) {
@@ -69,7 +79,7 @@ export class BookController {
     }
   }
 
-  @Post("/")
+  @Post('/')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -85,7 +95,7 @@ export class BookController {
     }
   }
 
-  @Post("/reserve/:id")
+  @Post('/reserve/:id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -94,7 +104,7 @@ export class BookController {
   @ApiBearerAuth()
   async reserveBook(
     @Param() param: { id: number },
-    @Req() req: IExpressRequest
+    @Req() req: IExpressRequest,
   ): Promise<any> {
     try {
       const { id } = param;
@@ -107,7 +117,7 @@ export class BookController {
     }
   }
 
-  @Put("/:id")
+  @Put('/:id')
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   async updateBookById(@Param() param: any, @Body() body: bookDto) {
@@ -120,7 +130,7 @@ export class BookController {
     }
   }
 
-  @Delete("/:id")
+  @Delete('/:id')
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   async deleteBookById(@Param() param: any) {
@@ -133,7 +143,7 @@ export class BookController {
     }
   }
 
-  @Get("/:id")
+  @Get('/:id')
   async fetchBookById(@Param() param: any) {
     const { id } = param;
     try {
@@ -144,7 +154,7 @@ export class BookController {
     }
   }
 
-  @Get("/available-book")
+  @Get('/available-book')
   async findAvailableBook() {
     try {
       const book = await this.bookService.findAvailableBook();
@@ -154,8 +164,8 @@ export class BookController {
     }
   }
 
-  @Get("/search")
-  async fetchProductByTitle(@Query("title") title: string) {
+  @Get('/search')
+  async fetchProductByTitle(@Query('title') title: string) {
     try {
       const book = await this.bookService.findBookByTitle(title);
       return book;
@@ -164,17 +174,17 @@ export class BookController {
     }
   }
 
-  @Get("/filter")
+  @Get('/filter')
   async fetchBooksByFilter(
-    @Query("genre") genre: number,
-    @Query("author") author: number
+    @Query('genre') genre: number,
+    @Query('author') author: number,
   ) {
     try {
       const books = await this.bookService.findBooksByFilter(genre, author);
       if (books.length > 0) {
         return books;
       } else {
-        throw new BadGatewayException("Books not found for the given filter");
+        throw new BadGatewayException('Books not found for the given filter');
       }
     } catch (error) {
       throw new ApiError(error);

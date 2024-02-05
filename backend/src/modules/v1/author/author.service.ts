@@ -1,14 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { AuthorEntity } from "./entity/authot.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { authorDto } from "./dto/author.dto";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+//entity
+import { AuthorEntity } from './entity/authot.entity';
+
+//dto
+import { authorDto } from './dto/author.dto';
 
 @Injectable()
 export class AuthorService {
   constructor(
     @InjectRepository(AuthorEntity)
-    private readonly authorModal: Repository<AuthorEntity>
+    private readonly authorModal: Repository<AuthorEntity>,
   ) {}
 
   async createAuthor(body: authorDto) {
@@ -18,7 +22,7 @@ export class AuthorService {
   }
 
   async findAllAuthor() {
-    const author = await this.authorModal.find({ relations: ["books"] });
+    const author = await this.authorModal.find({ relations: ['books'] });
     return author;
   }
 

@@ -1,10 +1,8 @@
 import {
-  BadGatewayException,
   BadRequestException,
   Body,
   Controller,
   Get,
-  HttpException,
   HttpStatus,
   NotFoundException,
   Param,
@@ -12,26 +10,36 @@ import {
   Put,
   Req,
   UseGuards,
-} from "@nestjs/common";
-import { BorrowService } from "./borrow.service";
-import { borrowDto } from "./dto/borrow.dto";
-import { BookService } from "../book/book.service";
-import { MemberService } from "../membership/member.service";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
-import { IExpressRequest } from "src/@types/auth";
-import { ApiError } from "src/exceptions/api-error.exception";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags("Borrow Book")
-@Controller("borrows")
+//service
+import { BorrowService } from './borrow.service';
+import { BookService } from '../book/book.service';
+import { MemberService } from '../membership/member.service';
+
+//dto
+import { borrowDto } from './dto/borrow.dto';
+
+//auth-guard
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+
+//types
+import { IExpressRequest } from 'src/@types/auth';
+
+//error-filtering
+import { ApiError } from 'src/exceptions/api-error.exception';
+
+@ApiTags('Borrow Book')
+@Controller('borrows')
 export class BorrowController {
   constructor(
     private readonly borrowService: BorrowService,
     private readonly bookService: BookService,
-    private readonly memberService: MemberService
+    private readonly memberService: MemberService,
   ) {}
 
-  @Get("/")
+  @Get('/')
   // @UseGuards(AdminAuthGuard)
   @ApiResponse({
     status: HttpStatus.OK,
@@ -48,7 +56,7 @@ export class BorrowController {
     }
   }
 
-  @Post("/")
+  @Post('/')
   @ApiResponse({
     status: HttpStatus.CREATED,
   })
@@ -59,18 +67,18 @@ export class BorrowController {
       const bookId = body.book;
       const book = await this.bookService.findBookById(bookId);
       if (!book) {
-        throw new NotFoundException("Book not found");
+        throw new NotFoundException('Book not found');
       }
       if (!book.isAvailable) {
-        throw new BadRequestException("Book is not available");
+        throw new BadRequestException('Book is not available');
       }
       const member = await this.memberService.findMemberByUserId(body.user);
       if (!member) {
-        throw new BadRequestException("user is not a library member yet");
+        throw new BadRequestException('user is not a library member yet');
       }
       const isReserved = this.bookService.isBookReserved(book, body.user);
       if (isReserved) {
-        throw new NotFoundException("Book is reserved by someone else.");
+        throw new NotFoundException('Book is reserved by someone else.');
       }
       await this.borrowService.createBorrowBook(body);
       await this.bookService.markBookUnavailable(bookId);
@@ -80,17 +88,17 @@ export class BorrowController {
     }
   }
 
-  @Put("/return-book/:id")
+  @Put('/return-book/:id')
   @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
-  async returnBook(@Param("id") borrowId: number) {
+  async returnBook(@Param('id') borrowId: number) {
     try {
       let borrowedBook = await this.borrowService.findBorrowById(borrowId);
       if (!borrowedBook) {
-        throw new NotFoundException("Borrow book not found.");
+        throw new NotFoundException('Borrow book not found.');
       }
       if (borrowedBook.isReturned) {
-        throw new Error("Book is already returned.");
+        throw new Error('Book is already returned.');
       }
       const returnDate = new Date();
       const book = this.borrowService.returnBook(borrowId, returnDate);
@@ -101,7 +109,7 @@ export class BorrowController {
     }
   }
 
-  @Get("/:id")
+  @Get('/:id')
   // @UseGuards(AdminAuthGuard)
   @ApiBearerAuth()
   async findBorrowBookById(@Param() param: any) {

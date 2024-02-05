@@ -9,19 +9,27 @@ import {
   Post,
   Put,
   UseGuards,
-} from "@nestjs/common";
-import { UserService } from "./user.service";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { userDto } from "./dto/user.dto";
-import { AdminAuthGuard } from "src/guards/auth-jwt/admin-auth.guard";
-import { ApiError } from "src/exceptions/api-error.exception";
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags("User")
-@Controller("users")
+//service
+import { UserService } from './user.service';
+
+//dto
+import { userDto } from './dto/user.dto';
+
+//auth-guard
+import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+
+//error filtering
+import { ApiError } from 'src/exceptions/api-error.exception';
+
+@ApiTags('User')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get("/")
+  @Get('/')
   @ApiResponse({
     status: HttpStatus.OK,
     type: userDto,
@@ -36,7 +44,7 @@ export class UserController {
     }
   }
 
-  @Get("/non-members")
+  @Get('/non-members')
   @ApiResponse({
     status: HttpStatus.OK,
     type: userDto,
@@ -51,7 +59,7 @@ export class UserController {
     }
   }
 
-  @Post("/")
+  @Post('/')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -59,7 +67,7 @@ export class UserController {
   })
   @ApiBearerAuth()
   async addUser(@Body() body: userDto): Promise<any> {
-    console.log("hello");
+    console.log('hello');
     try {
       const user = await this.userService.createUser(body);
       return user;
@@ -68,7 +76,7 @@ export class UserController {
     }
   }
 
-  @Put("/:id")
+  @Put('/:id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
@@ -85,7 +93,7 @@ export class UserController {
     }
   }
 
-  @Delete("/:id")
+  @Delete('/:id')
   @UseGuards(AdminAuthGuard)
   @HttpCode(204)
   @ApiResponse({
@@ -102,7 +110,7 @@ export class UserController {
     }
   }
 
-  @Get("/:id")
+  @Get('/:id')
   @ApiResponse({
     status: HttpStatus.OK,
     type: userDto,

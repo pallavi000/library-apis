@@ -1,16 +1,20 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { RegisterDto } from "../auth/dto/register.dto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "./entity/user.entity";
-import { IsNull, Repository } from "typeorm";
-import * as bcrypt from "bcrypt";
-import { userDto } from "./dto/user.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { IsNull, Repository } from 'typeorm';
+
+//dto
+import { RegisterDto } from '../auth/dto/register.dto';
+import { userDto } from './dto/user.dto';
+
+//entity
+import { UserEntity } from './entity/user.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
-    private readonly userModel: Repository<UserEntity>
+    private readonly userModel: Repository<UserEntity>,
   ) {}
   async createUser(body: RegisterDto) {
     const insertUser = new UserEntity();
@@ -33,18 +37,18 @@ export class UserService {
 
   async updateUser(id: number, body: userDto) {
     const user = await this.userModel.update({ id }, { ...body });
-    return "success";
+    return 'success';
   }
 
   async deleteUser(id: number) {
     const user = await this.userModel.delete({ id });
-    return "success";
+    return 'success';
   }
 
   async findUserById(id: number) {
     const user = await this.userModel.findOne({
       where: { id },
-      relations: ["member"],
+      relations: ['member'],
     });
     return user;
   }
@@ -52,7 +56,7 @@ export class UserService {
   async findUserByEmail(email: string) {
     const user = await this.userModel.findOne({
       where: { email },
-      relations: ["member"],
+      relations: ['member'],
     });
     return user;
   }
@@ -65,7 +69,7 @@ export class UserService {
 
   async comparePassword(
     password: string,
-    hashPassword: string
+    hashPassword: string,
   ): Promise<boolean> {
     const isRightPassword = await bcrypt.compare(password, hashPassword);
     if (!isRightPassword) {

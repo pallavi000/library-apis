@@ -19,15 +19,22 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import { fetchAllAuthor } from "../../../api/home";
-import { TAuthor } from "../../../@types/author";
-import AddAuthorModal from "./AddAuthorModal";
 
+//icons
+import { Add } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditAuthorModal from "./EditAuthorModal";
+
+//api
+import { fetchAllAuthor } from "../../../api/home";
 import { deleteAuthor } from "../../../api/author";
+
+//types
+import { TAuthor } from "../../../@types/author";
+
+//Modal
+import AddAuthorModal from "./AddAuthorModal";
+import EditAuthorModal from "./EditAuthorModal";
 
 function Authors() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);

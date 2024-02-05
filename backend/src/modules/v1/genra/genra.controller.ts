@@ -13,10 +13,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { GenraService } from './genra.service';
-import { genraDto } from './dto/genra.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AdminAuthGuard } from 'src/guards/auth-jwt/admin-auth.guard';
+
+//service
+import { GenraService } from './genra.service';
+
+//dto
+import { genraDto } from './dto/genra.dto';
+
+//error filtering
 import { ApiError } from 'src/exceptions/api-error.exception';
 
 @ApiTags('Genre')

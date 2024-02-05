@@ -1,9 +1,15 @@
-import { Module } from "@nestjs/common";
-import { UserController } from "./user.controller";
-import { UserService } from "./user.service";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { UserEntity } from "./entity/user.entity";
-import { JwtService } from "@nestjs/jwt";
+import { Module } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+//controller
+import { UserController } from './user.controller';
+
+//services
+import { UserService } from './user.service';
+
+//entity
+import { UserEntity } from './entity/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
