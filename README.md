@@ -4,6 +4,9 @@ Library Management system build using React Js , Nest Js and MySql.
 The system allows users to perform CRUD operations on Books,Genre, Author,Users,Member. User can borrow their favorite book and return before due date.
 We have also implemented the features of authentication and authorization. Proper permissions and role must be provided to provided to access protected and sensitive api.
 
+# Live Link
+- `https://library.bishnu-bhattarai.com.np/api/v1/docs`
+
 [![ReactJS](https://img.shields.io/badge/react.js-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
 ![NestJS](https://img.shields.io/badge/nest.js-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
